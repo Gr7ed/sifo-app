@@ -24,5 +24,16 @@ include 'includes/header.php';
             <textarea name="non_food_description" id="non_food_description"></textarea>
 
             <label for="non_food_condition"><?php echo translate('non_food_condition'); ?>:</label>
-            <input type="text" name="non_food_condition"
-                [_{{{CITATION{{{_1{](https://github.com/Denvey1van1Loenen/Healthone/tree/6a73454688ada715f765c2d9481c9475d169e8a9/apps%2Fhealthone%2Fhtdocs%2FModules%2FDatabase.php)[_{{{CITATION{{{_2{](https://github.com/frankyhung93/BookStackMailer/tree/e566f0332c4f01159206728a7f8028f05485f333/connect_db.php)[_{{{CITATION{{{_3{](https://github.com/ncfcdaniel/GroupDesignProject/tree/c3ff97d0d35b9bcf1f52800de8b3bc3b06e9fc08/Final%20Product%2FAdmin%2FAdminPermissions%2FSupplier%2FDeleteSupplier.php)
+            <input type="text" name="non_food_condition" id="non_food_condition">
+        </div>
+
+        <div id="snapDonationFields" style="display:none;">
+            <label for="snap_amount"><?php echo translate('amount'); ?> (USD):</label>
+            <input type="number" name="snap_amount" id="snap_amount">
+        </div>
+
+        <button type="submit"><?php echo translate('submit'); ?></button>
+    </form>
+</main>
+<script src="js/scripts.js"></script>
+<?php include 'includes/footer.php'; ?>
