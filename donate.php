@@ -11,7 +11,6 @@ include 'includes/header.php';
             <option value=""><?php echo translate('select_donation_type'); ?></option>
             <option value="Food"><?php echo translate('food'); ?></option>
             <option value="Non-Food"><?php echo translate('non_food'); ?></option>
-            <option value="Snap Donation"><?php echo translate('snap_donation'); ?></option>
         </select>
 
         <div id="foodFields" style="display:none;">
@@ -25,11 +24,6 @@ include 'includes/header.php';
 
             <label for="non_food_condition"><?php echo translate('non_food_condition'); ?>:</label>
             <input type="text" name="non_food_condition" id="non_food_condition">
-        </div>
-
-        <div id="snapDonationFields" style="display:none;">
-            <label for="snap_amount"><?php echo translate('amount'); ?> (USD):</label>
-            <input type="number" name="snap_amount" id="snap_amount">
         </div>
 
         <button type="submit"><?php echo translate('submit'); ?></button>

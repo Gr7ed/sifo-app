@@ -1,5 +1,9 @@
 {
     "welcome": "Welcome to Save It For Others (SIFO)",
+    "intro_text": "Your platform for making a difference through donations.",
+    "features": "Features",
+    "register": "Register",
+    "login": "Login",
     "donate": "Donate",
     "make_donation": "Make a Donation",
     "donation_type": "Donation Type",
