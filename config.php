@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); // Start or resume the session
 
 // Load the appropriate language file based on the session
 $lang = $_SESSION['lang'] ?? 'en';
@@ -20,13 +20,13 @@ $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 $options = [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES => false,
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Error mode: exceptions
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,      // Fetch mode: associative array
+    PDO::ATTR_EMULATE_PREPARES => false,                 // Use real prepared statements
 ];
 
 try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
+    $pdo = new PDO($dsn, $user, $pass, $options); // Create PDO instance
 } catch (\PDOException $e) {
-    throw new \PDOException($e->getMessage(), (int) $e->getCode());
+    throw new \PDOException($e->getMessage(), (int) $e->getCode()); // Handle connection error
 }
