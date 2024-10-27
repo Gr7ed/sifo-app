@@ -1,0 +1,18 @@
+{
+    "welcome": "مرحبًا بك في احفظه للآخرين (SIFO)",
+    "donate": "تبرع",
+    "make_donation": "قم بالتبرع",
+    "donation_type": "نوع التبرع",
+    "food": "طعام",
+    "non_food": "غير طعام",
+    "snap_donation": "تبرع سريع",
+    "food_description": "وصف الطعام",
+    "non_food_description": "وصف غير الطعام",
+    "non_food_condition": "حالة العنصر",
+    "amount": "المبلغ (بالدولار الأمريكي)",
+    "submit": "إرسال",
+    "admin_dashboard": "لوحة تحكم المسؤول",
+    "manage_users": "إدارة المستخدمين",
+    "manage_donations": "إدارة التبرعات",
+    "manage_snap_donations": "إدارة التبرعات السريعة"
+}
