@@ -5,4 +5,3 @@ if (isset($_GET['lang'])) {
 }
 header('Location: ' . $_SERVER['HTTP_REFERER']);
 exit();
-?>

@@ -16,4 +16,3 @@ function checkRole($role)
         exit();
     }
 }
-?>
