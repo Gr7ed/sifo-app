@@ -1,4 +1,5 @@
 <?php
+include 'config.php';
 include 'includes/session.php';
 checkSession();
 include 'includes/header.php';

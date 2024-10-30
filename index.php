@@ -1,6 +1,9 @@
-<?php include 'includes/header.php'; ?>
+<?php
+include 'config.php';
+include 'includes/header.php';
+?>
 <main>
-    <h1><?php echo translate('welcome'); ?></h1>
+    <h1><?php echo translate(key: 'welcome'); ?></h1>
     <p><?php echo translate('intro_text'); ?></p>
 
     <h2><?php echo translate('features'); ?></h2>

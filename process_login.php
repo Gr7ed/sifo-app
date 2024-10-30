@@ -1,7 +1,11 @@
 <?php
-include 'config.php';
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Start a session if not already active
+}
 
+include 'config.php';
+
+// Your login processing logic
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
