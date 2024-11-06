@@ -1,0 +1,14 @@
+{
+    "name": "sifo/sifo-app",
+    "description": "donation app",
+    "type": "library",
+    "require": {
+        "dompdf/dompdf": "^3.0"
+    },
+    "authors": [
+        {
+            "name": "Suhail",
+            "email": "suhail142176@gmail.com"
+        }
+    ]
+}
