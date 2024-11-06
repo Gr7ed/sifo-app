@@ -4,7 +4,7 @@ function forwardDonation($donation_id, $donation_type, $item_condition = null)
     global $pdo;
 
     // Fetch eligible charities
-    $stmt = $pdo->prepare('SELECT charity_id FROM charity_preferences WHERE donation_type = ? AND (accepted_conditions IS NULL OR accepted_conditions = ?)');
+    $stmt = $pdo->prepare('SELECT charity_id FROM charity_preferences WHERE donation_type = ?');
     $stmt->execute([$donation_type, $item_condition]);
     $eligible_charities = $stmt->fetchAll();
 

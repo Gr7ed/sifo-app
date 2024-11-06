@@ -13,6 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $pdo->prepare('INSERT INTO snap_donations (name, email, amount, transaction_id) VALUES (?, ?, ?, ?)');
     $stmt->execute([$name, $email, $snap_amount, $transaction_id]);
 
-    echo "Snap donation successful!";
+    // Redirect to receipt page
+    header("Location: receipt.php?transaction_id=$transaction_id");
+    exit();
 }
 ?>

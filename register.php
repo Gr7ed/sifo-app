@@ -36,16 +36,21 @@ include 'includes/header.php';
             <label for="charity_registration_number"><?php echo translate('charity_registration_number'); ?>:</label>
             <input type="text" name="charity_registration_number" id="charity_registration_number">
 
-            <label for="donation_types"><?php echo translate('accepted_donation_types'); ?>:</label>
-            <select name="donation_types[]" id="donation_types" multiple>
-                <option value="Food"><?php echo translate('food'); ?></option>
-                <option value="Non-Food"><?php echo translate('non_food'); ?></option>
-                <option value="Snap Donation"><?php echo translate('snap_donation'); ?></option>
-            </select>
-
-            <label for="accepted_conditions"><?php echo translate('accepted_conditions'); ?>:</label>
-            <input type="text" name="accepted_conditions" id="accepted_conditions">
+            <label><?php echo translate('accepted_donation_types'); ?>:</label>
+            <div>
+                <input type="checkbox" name="donation_types[]" id="food" value="Food">
+                <label for="food"><?php echo translate('food'); ?></label>
+            </div>
+            <div>
+                <input type="checkbox" name="donation_types[]" id="non_food" value="Non-Food">
+                <label for="non_food"><?php echo translate('non_food'); ?></label>
+            </div>
+            <div>
+                <input type="checkbox" name="donation_types[]" id="snap_donation" value="Snap Donation">
+                <label for="snap_donation"><?php echo translate('snap_donation'); ?></label>
+            </div>
         </div>
+
 
         <button type="submit"><?php echo translate('register'); ?></button>
     </form>

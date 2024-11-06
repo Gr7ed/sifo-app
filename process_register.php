@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $organization_name = $_POST['organization_name'] ?? null;
     $charity_registration_number = $_POST['charity_registration_number'] ?? null;
     $donation_types = $_POST['donation_types'] ?? [];
-    $accepted_conditions = $_POST['accepted_conditions'] ?? null;
 
     $pdo->beginTransaction();
 
@@ -31,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->execute([$user_id, $charity_registration_number]);
 
             foreach ($donation_types as $type) {
-                $stmt = $pdo->prepare('INSERT INTO charity_preferences (charity_id, donation_type, accepted_conditions) VALUES (?, ?, ?)');
-                $stmt->execute([$user_id, $type, $accepted_conditions]);
+                $stmt = $pdo->prepare('INSERT INTO charity_preferences (charity_id, donation_type) VALUES (?, ?)');
+                $stmt->execute([$user_id, $type]);
             }
         }
 
