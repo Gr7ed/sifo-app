@@ -12,6 +12,7 @@ include 'includes/header.php';
         <input type="password" name="password" id="password" required>
 
         <button type="submit"><?php echo translate('login'); ?></button>
+        <a href="reset_password.php">Forgot Password?</a>
     </form>
 </main>
 <?php include 'includes/footer.php'; ?>

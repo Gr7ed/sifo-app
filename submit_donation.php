@@ -21,6 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $donation_id = $pdo->lastInsertId();
-    forwardDonation($donation_id, $donation_type, $non_food_condition);
+    forwardDonation($donation_id, $donation_type); // Only pass $donation_id and $donation_type
 }
 ?>

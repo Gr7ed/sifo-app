@@ -1,15 +1,26 @@
 <?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start(); // Start a session if not already active
+}
+
 include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
+    // Validate and sanitize inputs
+    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
-    $user_type = $_POST['user_type'];
-    $name = $_POST['name'] ?? null;
-    $organization_name = $_POST['organization_name'] ?? null;
-    $charity_registration_number = $_POST['charity_registration_number'] ?? null;
+    $user_type = filter_input(INPUT_POST, 'user_type', FILTER_SANITIZE_STRING);
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING) ?? null;
+    $organization_name = filter_input(INPUT_POST, 'organization_name', FILTER_SANITIZE_STRING) ?? null;
+    $charity_registration_number = filter_input(INPUT_POST, 'charity_registration_number', FILTER_SANITIZE_STRING) ?? null;
     $donation_types = $_POST['donation_types'] ?? [];
+
+    if (!$email) {
+        $_SESSION['error'] = "Invalid email address.";
+        header('Location: register.php');
+        exit();
+    }
 
     $pdo->beginTransaction();
 
@@ -36,10 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         $pdo->commit();
-        echo "Registration successful!";
+        $_SESSION['success'] = "Registration successful!";
+        header('Location: login.php');
+        exit();
     } catch (Exception $e) {
         $pdo->rollBack();
-        throw $e;
+        $_SESSION['error'] = "Registration failed: " . $e->getMessage();
+        header('Location: register.php');
+        exit();
     }
 }
 ?>

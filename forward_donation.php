@@ -1,11 +1,11 @@
 <?php
-function forwardDonation($donation_id, $donation_type, $item_condition = null)
+function forwardDonation($donation_id, $donation_type)
 {
     global $pdo;
 
-    // Fetch eligible charities
+    // Fetch eligible charities based on donation_type
     $stmt = $pdo->prepare('SELECT charity_id FROM charity_preferences WHERE donation_type = ?');
-    $stmt->execute([$donation_type, $item_condition]);
+    $stmt->execute([$donation_type]);
     $eligible_charities = $stmt->fetchAll();
 
     if (count($eligible_charities) > 0) {
