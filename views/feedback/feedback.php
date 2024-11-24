@@ -1,8 +1,10 @@
 <?php
-include_once __DIR__ . '/../config/config.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . '/../../config/config.php';
 include_once __DIR__ . '/../layouts/header.php';
 
-session_start();
 $userLoggedIn = isset($_SESSION['user_id']);
 ?>
 
@@ -20,6 +22,8 @@ $userLoggedIn = isset($_SESSION['user_id']);
     <input type="email" id="email" name="email" required placeholder="Enter your email">
 
     <!-- Feedback Message -->
+    <label for="subject">Subject</label>
+    <input type="subject" id="subject" name="subject" required placeholder="Subject">
     <label for="message">Message:</label>
     <textarea id="message" name="message" required placeholder="Enter your feedback"></textarea>
 

@@ -22,7 +22,7 @@ include __DIR__ . '/layouts/header.php';
 
     <!-- Features Section -->
     <section class="features">
-        <h2>Features</h2>
+        <h2><?php echo translate(key: 'features'); ?></h2>
         <ul>
             <li>Donate food, clothes, and other items to those in need.</li>
             <li>Track your donations and see the impact you've made.</li>
@@ -35,14 +35,15 @@ include __DIR__ . '/layouts/header.php';
         <?php if (!isset($_SESSION['user_id'])): ?>
             <h3>Join Us Today!</h3>
             <p>Create an account or log in to start making a difference.</p>
-            <a href="/sifo-app/views/auth/register.php" class="button">Register</a>
-            <a href="/sifo-app/views/auth/login.php" class="button">Login</a>
+            <a href="/sifo-app/views/auth/register.php" class="button"><?php echo translate('sign_up'); ?></a>
+            <a href="/sifo-app/views/auth/login.php" class="button"><?php echo translate('login'); ?></a>
         <?php else: ?>
             <h3>Welcome Back, <?= htmlspecialchars($_SESSION['username']); ?>!</h3>
             <p>
-                <a href="/sifo-app/controllers/AuthController.php?action=logout" class="button">Logout</a>
+                <a href="/sifo-app/controllers/AuthController.php?action=logout"
+                    class="button"><?php echo translate('logout'); ?></a>
                 <a href="/sifo-app/views/dashboard/<?= strtolower($_SESSION['user_type']); ?>_dashboard.php"
-                    class="button">Dashboard</a>
+                    class="button"><?php echo translate('dashboard'); ?></a>
             </p>
         <?php endif; ?>
     </section>

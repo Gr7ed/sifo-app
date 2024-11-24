@@ -17,9 +17,10 @@ class DonationModel
     public function saveDonation($data)
     {
         try {
+            // Insert the donation
             $stmt = $this->db->prepare("
-            INSERT INTO donations (donor_id, type, description, donate_condition, location, pickup_date_time, amount, forwarded_to, created_at, status) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, NULL, NOW(), 'Pending')
+            INSERT INTO donations (donor_id, type, description, donate_condition, city, district, pickup_date_time, amount, created_at, status) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'Available')
         ");
 
             $stmt->execute([
@@ -27,17 +28,48 @@ class DonationModel
                 $data['type'],
                 $data['description'],
                 $data['donate_condition'],
-                $data['location'],
+                $data['city'],
+                $data['district'],
                 $data['pickup_date_time'],
-                $data['amount']
+                $data['amount'],
             ]);
 
             return $this->db->lastInsertId();
         } catch (PDOException $e) {
             error_log("Error saving donation: " . $e->getMessage());
-            throw new Exception("Unable to save donation. Please try again.");
+            throw new Exception("Unable to save donation. Please try again.." . $e->getMessage());
         }
     }
+
+
+
+    public function getDonationsByStatus($status, $city, $type)
+    {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT 
+                    donations.*,
+                    donors.first_name AS donor_name, 
+                    donors.phone AS donor_phone, 
+                    donors.city AS donor_city, 
+                    donors.district AS donor_district
+                FROM 
+                    donations
+                JOIN 
+                    users AS donors ON donations.donor_id = donors.user_id
+                WHERE 
+                    donations.status = ? 
+                    AND donations.city = ? 
+                    AND donations.type = ?
+            ");
+            $stmt->execute([$status, $city, $type]);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error retrieving donations: " . $e->getMessage());
+            throw new Exception("Unable to retrieve donations. Please try again later.");
+        }
+    }
+
 
 
     /**

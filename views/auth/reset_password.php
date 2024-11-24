@@ -36,11 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<h1>Reset Password</h1>
+<h1><?php echo translate('reset_password'); ?></h1>
 <form method="POST">
-    <label for="email">Enter your registered email:</label>
+    <label for="email"><?php echo translate('reg_email'); ?></label>
     <input type="email" name="email" id="email" required>
-    <button type="submit">Send Reset Link</button>
+    <button type="submit"><?php echo translate('send_reset_link'); ?></button>
 </form>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

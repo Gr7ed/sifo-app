@@ -7,37 +7,12 @@ function toggleCharityFields() {
     }
 }
 
-function updateDistricts() {
-    const city = document.getElementById('city')?.value; // Safely access the element
-    const district = document.getElementById('district');
-
-    if (!district) return; // Exit if district element is not found
-
-    const districtsByCity = {
-        "Riyadh": ["Olaya", "Al-Nakheel", "King Fahd"],
-        "Jeddah": ["Al-Rawdah", "Al-Andalus", "Al-Balad"],
-        "Dammam": ["Al-Nakheel", "Al-Morouj", "Al-Faisaliah"],
-        "Mecca": ["Al-Haram", "Al-Aziziyah", "Al-Naseem"],
-        "Medina": ["Quba", "Al-Ula", "Al-Masjid Al-Nabawi"]
-    };
-
-    // Clear previous options
-    district.innerHTML = '<option value="">Select a district</option>';
-
-    // Populate districts based on the selected city
-    if (districtsByCity[city]) {
-        districtsByCity[city].forEach((dist) => {
-            const option = document.createElement('option');
-            option.value = dist;
-            option.textContent = dist;
-            district.appendChild(option);
-        });
-    }
-}
-
 // Function to toggle donation fields based on type
 function toggleDonationFields() {
-    const type = document.getElementById('type').value;
+    const typeElement = document.getElementById('type');
+    if (!typeElement) return; // Exit if the type element is not found
+
+    const type = typeElement.value;
     const foodFields = document.getElementById('foodFields');
     const nonFoodFields = document.getElementById('nonFoodFields');
 
@@ -47,24 +22,23 @@ function toggleDonationFields() {
 
     // Show/hide fields based on the selected type
     if (type === 'Food') {
-        foodFields.style.display = 'block';
-        nonFoodFields.style.display = 'none';
+        if (foodFields) foodFields.style.display = 'block';
+        if (nonFoodFields) nonFoodFields.style.display = 'none';
 
         // Set required attributes for visible fields
         document.querySelectorAll('#foodFields input, #foodFields textarea').forEach(el => el.required = true);
     } else if (type === 'Non-Food') {
-        foodFields.style.display = 'none';
-        nonFoodFields.style.display = 'block';
+        if (foodFields) foodFields.style.display = 'none';
+        if (nonFoodFields) nonFoodFields.style.display = 'block';
 
         // Set required attributes for visible fields
         document.querySelectorAll('#nonFoodFields input, #nonFoodFields textarea').forEach(el => el.required = true);
     } else {
-        foodFields.style.display = 'none';
-        nonFoodFields.style.display = 'none';
+        if (foodFields) foodFields.style.display = 'none';
+        if (nonFoodFields) nonFoodFields.style.display = 'none';
     }
 }
 
-// document.addEventListener('DOMContentLoaded', toggleDonationFields);
 
 // Initialize scripts on page load
 document.addEventListener('DOMContentLoaded', () => {
@@ -74,6 +48,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add event listeners for dynamic updates
     document.getElementById('user_type')?.addEventListener('change', toggleCharityFields);
-    document.getElementById('city')?.addEventListener('change', updateDistricts);
     document.getElementById('type')?.addEventListener('change', toggleDonationFields);
+
+    const statsSection = document.querySelector('#donation-stats');
+
+    if (statsSection) {
+        fetch('/api/get-donation-stats.php')
+            .then(response => response.json())
+            .then(data => {
+                statsSection.innerHTML = `
+                    <p>Total Donations: ${data.totalDonations}</p>
+                    <p>Total Donors: ${data.totalDonors}</p>
+                `;
+            })
+            .catch(error => console.error('Error fetching stats:', error));
+    }
+
+    const registerForm = document.querySelector('#register-form');
+    if (registerForm) {
+        registerForm.addEventListener('submit', (e) => {
+            const username = document.querySelector('#username').value.trim();
+            const email = document.querySelector('#email').value.trim();
+            const password = document.querySelector('#password').value.trim();
+            
+            if (!username || !email || !password) {
+                e.preventDefault();
+                alert('All fields are required.');
+            }
+        });
+    }
 });
+

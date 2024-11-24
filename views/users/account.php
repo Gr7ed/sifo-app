@@ -45,31 +45,24 @@ if (!$user || !is_array($user)) {
 
 
     <!-- City -->
-    <label for="city"><?= translate('city') ?? 'City'; ?>:</label>
-    <select id="city" name="city" onchange="updateDistricts()" required>
-        <option value="Riyadh" <?= ($user['city'] === 'Riyadh') ? 'selected' : ''; ?>>
-            <?= translate('riyadh') ?? 'Riyadh'; ?>
+    <label for="city">City:</label>
+    <select id="city" name="city">
+        <option value="Riyadh" <?= (isset($user['city']) && $user['city'] === 'Riyadh') ? 'selected' : ''; ?>>Riyadh
         </option>
-        <option value="Jeddah" <?= ($user['city'] === 'Jeddah') ? 'selected' : ''; ?>>
-            <?= translate('jeddah') ?? 'Jeddah'; ?>
+        <option value="Jeddah" <?= (isset($user['city']) && $user['city'] === 'Jeddah') ? 'selected' : ''; ?>>Jeddah
         </option>
-        <option value="Dammam" <?= ($user['city'] === 'Dammam') ? 'selected' : ''; ?>>
-            <?= translate('dammam') ?? 'Dammam'; ?>
+        <option value="Dammam" <?= (isset($user['city']) && $user['city'] === 'Dammam') ? 'selected' : ''; ?>>Dammam
         </option>
-        <option value="Mecca" <?= ($user['city'] === 'Mecca') ? 'selected' : ''; ?>><?= translate('mecca') ?? 'Mecca'; ?>
-        </option>
-        <option value="Medina" <?= ($user['city'] === 'Medina') ? 'selected' : ''; ?>>
-            <?= translate('medina') ?? 'Medina'; ?>
+        <option value="Mecca" <?= (isset($user['city']) && $user['city'] === 'Mecca') ? 'selected' : ''; ?>>Mecca</option>
+        <option value="Medina" <?= (isset($user['city']) && $user['city'] === 'Medina') ? 'selected' : ''; ?>>Medina
         </option>
     </select>
 
     <!-- District -->
     <label for="district"><?= translate('district') ?? 'District'; ?>:</label>
-    <select id="district" name="district" required>
-        <option value="<?= htmlspecialchars($user['district'] ?? ''); ?>" selected>
-            <?= htmlspecialchars($user['district'] ?? 'Select a district'); ?>
-        </option>
-    </select>
+    <input type="text" id="district" name="district" value="<?= htmlspecialchars($user['district'] ?? ''); ?>"
+        placeholder="<?= translate('enter_district') ?? 'Enter your district'; ?>" required>
+
 
     <!-- Password -->
     <label for="password">New Password (leave blank to keep current password):</label>

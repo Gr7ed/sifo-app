@@ -9,6 +9,28 @@ class UserModel
         $this->db = $db;
     }
 
+    public function isUsernameExists($username)
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        return $stmt->fetchColumn() > 0; // Returns true if the username exists
+    }
+
+    public function isEmailExists($email)
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetchColumn() > 0; // Returns true if the email exists
+    }
+
+    public function isCharityRegistrationNumberExists($registrationNumber)
+    {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM charities WHERE charity_registration_number = ?");
+        $stmt->execute([$registrationNumber]);
+        return $stmt->fetchColumn() > 0; // Returns true if the registration number exists
+    }
+
+
     /**
      * Find a user by email
      * @param string $email
@@ -20,6 +42,7 @@ class UserModel
         $stmt->execute([$email]);
         return $stmt->fetch();
     }
+
 
     /**
      * Find a user by ID
@@ -67,14 +90,16 @@ class UserModel
     public function saveDonorDetails($userId, $userData)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO donors (user_id, first_name, last_name, phone)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO donors (user_id, first_name, last_name, phone, city, district)
+            VALUES (?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
             $userId,
             $userData['first_name'],
             $userData['last_name'],
-            $userData['phone']
+            $userData['phone'],
+            $userData['city'],
+            $userData['district']
         ]);
     }
 
@@ -85,12 +110,12 @@ class UserModel
      * @param int $userId
      * @param string $registrationNumber
      */
-    public function saveCharityDetails($userId, $registrationNumber, $acceptedTypes)
+    public function saveCharityDetails($userId, $registrationNumber, $charityName, $acceptedTypes, $city, $district)
     {
         $stmt = $this->db->prepare("
-            INSERT INTO charities (user_id, charity_registration_number, accepted_types)
-            VALUES (?, ?, ?)
+            INSERT INTO charities (user_id, charity_registration_number, charity_name, accepted_types, city, district)
+            VALUES (?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$userId, $registrationNumber, implode(',', $acceptedTypes)]);
+        $stmt->execute([$userId, $registrationNumber, $charityName, implode(',', $acceptedTypes), $city, $district]);
     }
 }

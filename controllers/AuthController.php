@@ -21,6 +21,22 @@ class AuthController
      */
     public function register($userData)
     {
+        if ($this->userModel->isUsernameExists($userData['username'])) {
+            die("The username '{$userData['username']}' is already taken. Please choose another.");
+        }
+
+        if ($this->userModel->isEmailExists($userData['email'])) {
+            die("The email '{$userData['email']}' is already registered. Please use another email.");
+        }
+
+        // Check if the charity registration number exists (only for charities)
+        if (
+            $userData['user_type'] === 'charity' &&
+            $this->userModel->isCharityRegistrationNumberExists($userData['charity_registration_number'])
+        ) {
+            die("The charity registration number '{$userData['charity_registration_number']}' is already registered. Please check your information.");
+        }
+
         // Hash the password
         $userData['password'] = password_hash($userData['password'], PASSWORD_BCRYPT);
 
@@ -34,7 +50,10 @@ class AuthController
             $this->userModel->saveCharityDetails(
                 $userId,
                 $userData['charity_registration_number'],
-                $userData['accepted_types']
+                $userData['charity_name'],
+                $userData['accepted_types'],
+                $userData['city'],
+                $userData['district']
             );
         }
 
@@ -103,6 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'password' => $_POST['password'] ?? null,
             'user_type' => $_POST['user_type'] ?? null,
             'charity_registration_number' => $_POST['charity_registration_number'] ?? null,
+            'charity_name' => $_POST['charity_name'] ?? null,
             'accepted_types' => $_POST['accepted_types'] ?? null, // For charities
             'city' => $_POST['city'] ?? null,
             'district' => $_POST['district'] ?? null
@@ -130,3 +150,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $auth = new AuthController();
     $auth->logout();
 }
+// if ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET['action'] === 'validate') {
+//     $field = htmlspecialchars($_GET['field']);
+//     $value = htmlspecialchars($_GET['value']);
+
+//     if (in_array($field, ['username', 'email'])) {
+//         $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE $field = ?");
+//         $stmt->execute([$value]);
+//         $exists = $stmt->fetchColumn() > 0;
+
+//         echo json_encode([
+//             'valid' => !$exists,
+//             'message' => $exists ? ucfirst($field) . " is already taken." : ''
+//         ]);
+//         exit();
+//     }
+// }
+

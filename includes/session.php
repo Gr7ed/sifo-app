@@ -9,7 +9,7 @@ if (isset($_GET['lang'])) {
 $lang = $_SESSION['lang'] ?? 'en';
 // Redirect to login if not authenticated
 if (!isset($_SESSION['user_id'])) {
-    header("Location: /views/auth/login.php");
+    header("Location: /sifo-app/views/auth/login.php");
     exit();
 }
 
