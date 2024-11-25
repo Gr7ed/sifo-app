@@ -41,34 +41,104 @@ class DonationModel
         }
     }
 
+    public function updateDonationStatus($donationId, $newStatus, $charityId = null)
+    {
+        try {
+            if ($newStatus === 'Pending' && $charityId !== null) {
+                $stmt = $this->db->prepare("UPDATE donations SET status = ?, forwarded_to = ? WHERE donation_id = ?");
+                $stmt->execute([$newStatus, $charityId, $donationId]);
+            } else {
+                $stmt = $this->db->prepare("UPDATE donations SET status = ? WHERE donation_id = ?");
+                $stmt->execute([$newStatus, $donationId]);
+            }
+        } catch (PDOException $e) {
+            error_log("Error updating donation status: " . $e->getMessage());
+            throw new Exception("Unable to update donation status. Please try again later.");
+        }
+    }
+
+    public function getDonationById($donationId)
+    {
+        try {
+            $stmt = $this->db->prepare("
+            SELECT 
+                donations.*,
+                donors.first_name AS donor_name,
+                donors.phone AS donor_phone
+            FROM 
+                donations
+            LEFT JOIN 
+                donors ON donations.donor_id = donors.user_id
+            WHERE 
+                donation_id = ?
+        ");
+            $stmt->execute([$donationId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching donation: " . $e->getMessage());
+            throw new Exception("Unable to fetch donation details. Please try again later.");
+        }
+    }
+
 
 
     public function getDonationsByStatus($status, $city, $type)
     {
         try {
             $stmt = $this->db->prepare("
-                SELECT 
-                    donations.*,
-                    donors.first_name AS donor_name, 
-                    donors.phone AS donor_phone, 
-                    donors.city AS donor_city, 
-                    donors.district AS donor_district
-                FROM 
-                    donations
-                JOIN 
-                    users AS donors ON donations.donor_id = donors.user_id
-                WHERE 
-                    donations.status = ? 
-                    AND donations.city = ? 
-                    AND donations.type = ?
-            ");
+            SELECT 
+                donations.*,
+                donors.first_name AS donor_name,
+                donors.phone AS donor_phone,
+                donors.city AS donor_city,
+                donors.district AS donor_district
+            FROM 
+                donations
+            LEFT JOIN 
+                donors ON donations.donor_id = donors.user_id
+            WHERE 
+                donations.status = ? 
+                AND donations.city = ? 
+                AND donations.type = ?
+        ");
             $stmt->execute([$status, $city, $type]);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            error_log("Error retrieving donations: " . $e->getMessage());
+            error_log("Error fetching donations by status: " . $e->getMessage());
             throw new Exception("Unable to retrieve donations. Please try again later.");
         }
     }
+    public function getRecentDonationsByCharity($charityId, $limit = 5)
+    {
+        $stmt = $this->db->prepare("
+            SELECT d.donation_id, d.description, d.status, d.pickup_date_time, d.city, d.district, u.username as donor_name, u.phone as donor_phone
+            FROM donations d
+            INNER JOIN users u ON d.donor_id = u.user_id
+            WHERE d.forwarded_to = ?
+            ORDER BY d.pickup_date_time DESC
+            LIMIT ?
+        ");
+        $stmt->bindValue(1, $charityId, PDO::PARAM_INT);
+        $stmt->bindValue(2, $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getTotalDonationsByCharity($charityId, $status = null)
+    {
+        $query = "SELECT COUNT(*) as total FROM donations WHERE forwarded_to = ?";
+        $params = [$charityId];
+
+        if ($status) {
+            $query .= " AND status = ?";
+            $params[] = $status;
+        }
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
 
 
 

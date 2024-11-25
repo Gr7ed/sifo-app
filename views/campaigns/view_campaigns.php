@@ -16,37 +16,135 @@ $campaigns = $campaignModel->getCampaignsByCharity($charityId);
 include __DIR__ . '/../layouts/header.php';
 ?>
 
-<h1>Your Campaigns</h1>
+<style>
+    main {
+        padding: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #faf7f0;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-family: 'Alexandria', sans-serif;
+    }
 
-<table>
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Target Amount</th>
-            <th>Collected Amount</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($campaigns as $campaign): ?>
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #4a4947;
+        font-size: 28px;
+    }
+
+    .add-campaign {
+        display: inline-block;
+        margin-bottom: 20px;
+        padding: 10px 20px;
+        background-color: #4a4947;
+        color: #faf7f0;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .add-campaign:hover {
+        background-color: #fccd2a;
+        color: #4a4947;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    table thead tr {
+        background-color: #4a4947;
+        color: #faf7f0;
+    }
+
+    table thead th {
+        padding: 10px;
+        text-align: left;
+        font-size: 16px;
+    }
+
+    table tbody tr:nth-child(odd) {
+        background-color: #f8f8f8;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #fff;
+    }
+
+    table tbody td {
+        padding: 10px;
+        font-size: 14px;
+        color: #4a4947;
+    }
+
+    table tbody tr:hover {
+        background-color: #f0e6d2;
+    }
+
+    .actions a {
+        color: #4a4947;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 5px 10px;
+        background-color: #e7e7e7;
+        border-radius: 4px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .actions a:hover {
+        background-color: #fccd2a;
+        color: #4a4947;
+    }
+</style>
+
+<main>
+    <h1>Your Campaigns</h1>
+    <a href="/sifo-app/views/campaigns/create_campaign.php" class="add-campaign"><?= translate('add_campaign'); ?></a>
+    <table>
+        <thead>
             <tr>
-                <td><?= htmlspecialchars($campaign['title']); ?></td>
-                <td><?= htmlspecialchars($campaign['description']); ?></td>
-                <td><?= htmlspecialchars($campaign['target_amount']); ?></td>
-                <td><?= htmlspecialchars($campaign['collected_amount']); ?></td>
-                <td><?= htmlspecialchars($campaign['start_date']); ?></td>
-                <td><?= htmlspecialchars($campaign['end_date']); ?></td>
-                <td>
-                    <!-- Actions can include editing or deleting campaigns -->
-                    <a
-                        href="/sifo-app/views/campaigns/edit_campaign.php?campaign_id=<?= $campaign['campaign_id']; ?>">Edit</a>
-                </td>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Target Amount</th>
+                <th>Collected Amount</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Actions</th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php if (!empty($campaigns)): ?>
+                <?php foreach ($campaigns as $campaign): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($campaign['title']); ?></td>
+                        <td><?= htmlspecialchars($campaign['description']); ?></td>
+                        <td><?= htmlspecialchars($campaign['target_amount']); ?></td>
+                        <td><?= htmlspecialchars($campaign['collected_amount']); ?></td>
+                        <td><?= htmlspecialchars($campaign['start_date']); ?></td>
+                        <td><?= htmlspecialchars($campaign['end_date']); ?></td>
+                        <td class="actions">
+                            <a
+                                href="/sifo-app/views/campaigns/edit_campaign.php?campaign_id=<?= $campaign['campaign_id']; ?>">Edit</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="7" style="text-align: center; color: #a0a0a0;">No campaigns found.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</main>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

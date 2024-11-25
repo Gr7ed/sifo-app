@@ -29,13 +29,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['token'])) {
     $token = $_GET['token'];
     ?>
-    <h1>Set New Password</h1>
-    <form method="POST">
-        <input type="hidden" name="token" value="<?= htmlspecialchars($token); ?>">
-        <label for="password">New Password:</label>
-        <input type="password" name="password" id="password" required>
-        <button type="submit">Reset Password</button>
-    </form>
+    <style>
+        main {
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #faf7f0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-family: 'Alexandria', sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4a4947;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #4a4947;
+            font-weight: bold;
+        }
+
+        input {
+            padding: 12px;
+            font-size: 14px;
+            border: 1px solid #d8d2c2;
+            border-radius: 5px;
+            width: 100%;
+            background-color: #fff;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px;
+            background-color: #4a4947;
+            color: #faf7f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #fccd2a;
+        }
+
+        .info-message {
+            margin-top: 15px;
+            color: #4a4947;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+
+    <main>
+        <h1>Set New Password</h1>
+        <form method="POST">
+            <input type="hidden" name="token" value="<?= htmlspecialchars($token); ?>">
+            <label for="password">New Password:</label>
+            <input type="password" name="password" id="password" required placeholder="Enter your new password">
+            <button type="submit">Reset Password</button>
+        </form>
+    </main>
     <?php
 } else {
     echo "<p>Invalid request.</p>";

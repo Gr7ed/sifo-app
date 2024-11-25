@@ -69,6 +69,46 @@ class DonationController
             die("An error occurred while processing your donation. Please try again later.");
         }
     }
+    public function updateDonationStatus($donationId, $newStatus)
+    {
+        try {
+            session_start();
+
+            // Ensure the user is logged in and is a charity
+            if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'charity') {
+                die("Unauthorized access.");
+            }
+
+            $charityId = $_SESSION['user_id'];
+
+            // Get donation details
+            $donation = $this->donationModel->getDonationById($donationId);
+
+            if (!$donation) {
+                die("Donation not found.");
+            }
+
+            // Status transition logic
+            if ($newStatus === 'Pending' && $donation['status'] === 'Available') {
+                // Charity receives the donation
+                $this->donationModel->updateDonationStatus($donationId, $newStatus, $charityId);
+            } elseif ($newStatus === 'Delivered' && $donation['status'] === 'Pending' && $donation['forwarded_to'] == $charityId) {
+                // Charity marks the donation as delivered
+                $this->donationModel->updateDonationStatus($donationId, $newStatus);
+            } else {
+                die("Invalid status transition.");
+            }
+
+            // Redirect to dashboard
+            header("Location: /sifo-app/views/dashboard/charity_dashboard.php?status=updated");
+            exit();
+        } catch (Exception $e) {
+            error_log("Error updating donation status: " . $e->getMessage());
+            die("An error occurred while updating the donation status. Please try again.");
+        }
+    }
+
+
 
 
     // // Validate required fields
@@ -111,3 +151,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller->processSnapDonation($_POST);
     }
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_GET['action'] === 'update_status') {
+    $donationId = htmlspecialchars($_POST['donation_id']);
+    $newStatus = htmlspecialchars($_POST['new_status']);
+
+    $controller = new DonationController();
+    $controller->updateDonationStatus($donationId, $newStatus);
+}
+
