@@ -81,37 +81,37 @@ $userLoggedIn = isset($_SESSION['user_id']);
 </style>
 
 <main>
-    <h1>Feedback</h1>
-    <p>We value your feedback! Please let us know your thoughts.</p>
+    <h1><?php echo translate('feedback'); ?></h1>
+    <p><?php echo translate('feedback_intro'); ?></p>
 
     <form method="POST" action="/sifo-app/controllers/FeedbackController.php?action=submit">
         <!-- Name -->
         <div>
-            <label for="name">Name:</label>
+            <label for="name"><?php echo translate('name'); ?>:</label>
             <input type="text" id="name" name="name" required placeholder="Enter your name"
                 value="<?= $userLoggedIn ? htmlspecialchars($_SESSION['username']) : ''; ?>">
         </div>
 
         <!-- Email -->
         <div>
-            <label for="email">Email:</label>
+            <label for="email"><?php echo translate('email'); ?>:</label>
             <input type="email" id="email" name="email" required placeholder="Enter your email">
         </div>
 
         <!-- Subject -->
         <div>
-            <label for="subject">Subject:</label>
+            <label for="subject"><?php echo translate('subject'); ?>:</label>
             <input type="text" id="subject" name="subject" required placeholder="Subject">
         </div>
 
         <!-- Feedback Message -->
         <div>
-            <label for="message">Message:</label>
+            <label for="message"><?php echo translate('message'); ?>:</label>
             <textarea id="message" name="message" required placeholder="Enter your feedback"></textarea>
         </div>
 
         <!-- Submit Button -->
-        <button type="submit">Submit Feedback</button>
+        <button type="submit"><?php echo translate('submit_feedback'); ?></button>
     </form>
 </main>
 

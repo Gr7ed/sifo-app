@@ -157,29 +157,26 @@ include __DIR__ . '/layouts/header.php';
     <!-- Hero Section -->
     <section class="hero">
         <div class="features">
-            <h3>Our Platform Aims to</h3>
+            <h3><?php echo translate('our_aim'); ?></h3>
             <br>
             <p>
-                Bridge the gap between abundance and need, enabling the efficient transfer of food and essential items
-                to those who require them. By minimizing waste and maximizing impact, we strive to create a more
-                sustainable and compassionate society.
+                <?php echo translate('intro_aim'); ?>
             </p>
         </div>
         <br>
-
+        <h3><?php echo translate('how_work'); ?></h3>
+        <br>
         <?php if (!isset($_SESSION['user_id'])): ?>
             <div class="platform-details">
                 <!-- Donor Section -->
                 <div class="donor-section">
                     <p>
-                        <b>As a Donor, Give Donations:</b><br />
+                        <b><?php echo translate('as_donors'); ?></b><br />
                         <br>
-                        Your generosity can make a significant impact. Donate food, non-food items, or make a quick monetary
-                        contribution through Snap Donate. Your donation, regardless of form, will be used to support those
-                        in need.
+                        <?php echo translate('intro_donors'); ?>
                     </p>
                     <button onclick="location.href='/sifo-app/views/donations/donate.php';">
-                        Donate Now
+                        <?php echo translate('donate_now'); ?>
                     </button>
                     <p style="font-size: 10px; margin-top: 10px;">
                         <span style="color: #000000;"><b>Note</b></span>: You can only donate via Snap Donate if you do not
@@ -190,14 +187,12 @@ include __DIR__ . '/layouts/header.php';
                 <!-- Charity Section -->
                 <div class="charity-section">
                     <p>
-                        <b>As a Charity, Manage Donations:</b><br />
+                        <b><?php echo translate('as_charities'); ?></b><br />
                         <br>
-                        You can efficiently manage donations, create targeted campaigns, and select the specific types
-                        of donations your organization needs most. By utilizing our platform, you can effectively distribute
-                        aid to those in need.
+                        <?php echo translate('intro_charities'); ?>
                     </p>
                     <button onclick="location.href='/sifo-app/views/dashboard/charity_dashboard.php';">
-                        Manage Donations
+                        <?php echo translate('manage_donations'); ?>
                     </button>
                     <p style="font-size: 10px; margin-top: 10px;">
                         <span style="color: #000000;"><b>Note</b></span>: This account type is specifically designed for
@@ -215,7 +210,7 @@ include __DIR__ . '/layouts/header.php';
 
     <!-- Partners Section -->
     <section class="partners">
-        <h3>Our Partners</h3>
+        <h3><?php echo translate('our_partners'); ?></h3>
         <div>
             <a href="#"><img src="/sifo-app/assets/img/albaik.png" alt="Partner Logo"></a>
             <a href="#"><img src="/sifo-app/assets/img/altazaj.png" alt="Partner Logo"></a>
