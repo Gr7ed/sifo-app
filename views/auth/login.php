@@ -214,8 +214,8 @@ if (isset($_SESSION['user_id'])) {
     <div class="login-form">
         <h1><?php echo translate('login'); ?></h1>
         <form method="POST" action="/sifo-app/controllers/AuthController.php?action=login">
-            <label for="email"><?php echo translate('email'); ?>:</label>
-            <input type="text" id="email" name="email" placeholder="Enter your email" required />
+            <label for="identifier"><?php echo translate('email'); ?>:</label>
+            <input type="text" id="identifier" name="identifier" placeholder="Enter your email/username" required />
 
             <label for="password"><?php echo translate('password'); ?>:</label>
             <input type="password" id="password" name="password" placeholder="Enter your password" required />

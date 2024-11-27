@@ -140,5 +140,31 @@ class CampaignModel
         $stmt->execute([$limit]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getAllCampaigns()
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            campaigns.campaign_id, 
+            campaigns.title, 
+            campaigns.description, 
+            campaigns.target_amount, 
+            COALESCE(SUM(contributions.amount), 0) AS collected_amount,
+            charities.charity_name
+        FROM campaigns
+        LEFT JOIN contributions ON campaigns.campaign_id = contributions.campaign_id
+        LEFT JOIN charities ON campaigns.charity_id = charities.user_id
+        WHERE campaigns.end_date >= NOW() 
+        GROUP BY 
+            campaigns.campaign_id, 
+            campaigns.title, 
+            campaigns.description, 
+            campaigns.target_amount, 
+            charities.charity_name
+        ORDER BY campaigns.start_date DESC
+    ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 }

@@ -21,10 +21,24 @@ class AuthController
      */
     public function register($userData)
     {
+        // Validate required fields
+        foreach (['username', 'first_name', 'last_name', 'phone', 'email', 'password', 'user_type', 'city', 'district'] as $field) {
+            if (empty($userData[$field])) {
+                die("{$field} field is required.");
+            }
+        }
+
+        // Validate password and confirm password match
+        if ($userData['password'] !== $userData['confirm_password']) {
+            die("Passwords do not match. Please ensure the password and confirm password fields are the same.");
+        }
+
+        // Check if the username already exists
         if ($this->userModel->isUsernameExists($userData['username'])) {
             die("The username '{$userData['username']}' is already taken. Please choose another.");
         }
 
+        // Check if the email already exists
         if ($this->userModel->isEmailExists($userData['email'])) {
             die("The email '{$userData['email']}' is already registered. Please use another email.");
         }
@@ -64,12 +78,13 @@ class AuthController
 
     /**
      * Log in an existing user
-     * @param string $email
+     * @param string $identifier
      * @param string $password
      */
-    public function login($email, $password)
+    public function login($identifier, $password)
     {
-        $user = $this->userModel->findUserByEmail($email);
+        // Check if the user exists by email or username
+        $user = $this->userModel->findUserByIdentifier($identifier);
 
         if ($user && password_verify($password, $user['password'])) {
             // Start session if not already active
@@ -91,9 +106,10 @@ class AuthController
             }
             exit();
         } else {
-            echo "Invalid email or password.";
+            die("Invalid email, username, or password.");
         }
     }
+
 
     /**
      * Log out the user
@@ -120,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'phone' => $_POST['phone'] ?? null,
             'email' => $_POST['email'] ?? null,
             'password' => $_POST['password'] ?? null,
+            'confirm_password' => $_POST['confirm_password'] ?? null,
             'user_type' => $_POST['user_type'] ?? null,
             'charity_registration_number' => $_POST['charity_registration_number'] ?? null,
             'charity_name' => $_POST['charity_name'] ?? null,
@@ -127,43 +144,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'city' => $_POST['city'] ?? null,
             'district' => $_POST['district'] ?? null
         ];
-
+        // Validate password and confirm password match
+        if (!empty($password) && $password !== $confirmPassword) {
+            die("Passwords do not match. Please ensure the password and confirm password fields are the same.");
+        }
         // Validate required fields
         foreach (['username', 'first_name', 'last_name', 'phone', 'email', 'password', 'user_type', 'city', 'district'] as $field) {
             if (empty($userData[$field])) {
-                die("All fields are required.");
+                die("{$field} field is required.");
             }
         }
 
         $auth->register($userData);
     } elseif ($_GET['action'] === 'login') {
-        $email = $_POST['email'] ?? null;
+        $identifier = $_POST['identifier'] ?? null; // Can be email or username
         $password = $_POST['password'] ?? null;
 
-        if (empty($email) || empty($password)) {
-            die("Email and password are required.");
+        if (empty($identifier) || empty($password)) {
+            die("Email/Username and password are required.");
         }
 
-        $auth->login($email, $password);
+        $auth->login($identifier, $password);
     }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET['action'] === 'logout') {
     $auth = new AuthController();
     $auth->logout();
 }
-// if ($_SERVER['REQUEST_METHOD'] === 'GET' && $_GET['action'] === 'validate') {
-//     $field = htmlspecialchars($_GET['field']);
-//     $value = htmlspecialchars($_GET['value']);
-
-//     if (in_array($field, ['username', 'email'])) {
-//         $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE $field = ?");
-//         $stmt->execute([$value]);
-//         $exists = $stmt->fetchColumn() > 0;
-
-//         echo json_encode([
-//             'valid' => !$exists,
-//             'message' => $exists ? ucfirst($field) . " is already taken." : ''
-//         ]);
-//         exit();
-//     }
-// }
-

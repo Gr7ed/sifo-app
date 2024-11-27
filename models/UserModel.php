@@ -32,29 +32,21 @@ class UserModel
 
 
     /**
-     * Find a user by email
-     * @param string $email
-     * @return array|null
+     * Find a user by identifier
+     * @param string $identifier
+     * 
      */
-    public function findUserByEmail($email)
+    public function findUserByIdentifier($identifier)
     {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        return $stmt->fetch();
+        $stmt = $this->db->prepare("
+            SELECT * 
+            FROM users 
+            WHERE email = ? OR username = ?
+        ");
+        $stmt->execute([$identifier, $identifier]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-
-    /**
-     * Find a user by ID
-     * @param int $userId
-     * @return array|null
-     */
-    public function findUserById($userId)
-    {
-        $stmt = $this->db->prepare("SELECT * FROM users WHERE user_id = ?");
-        $stmt->execute([$userId]);
-        return $stmt->fetch();
-    }
 
     /**
      * Save a new user

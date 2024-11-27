@@ -26,7 +26,15 @@ $direction = $language === 'ar' ? 'rtl' : 'ltr';
 
     h1 {
         text-align: center;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        color: #4a4947;
+    }
+
+    h3 {
+        text-align: left;
+        margin-bottom: 20px;
+        margin-top: 20px;
         color: #4a4947;
     }
 
@@ -160,6 +168,8 @@ $direction = $language === 'ar' ? 'rtl' : 'ltr';
                     placeholder="<?php echo translate('confirm_password'); ?>">
             </div>
 
+            <h3><?php echo translate('address'); ?>:</h3>
+
             <div>
                 <label for="city"><?php echo translate('city'); ?></label>
                 <select name="city" id="city">
@@ -181,8 +191,10 @@ $direction = $language === 'ar' ? 'rtl' : 'ltr';
             </div>
         </div>
 
+
         <!-- Charity-Specific Fields -->
         <div id="charityFields">
+            <h3><?php echo translate('charity-details'); ?>:</h3>
             <div>
                 <label for="charity_name"><?php echo translate('charity_name'); ?></label>
                 <input type="text" name="charity_name" id="charity_name"

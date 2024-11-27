@@ -135,5 +135,9 @@
     "no-campaigns": "No campaigns available.",
     "welcome_back": "Welcome Back,",
     "charity_note": "This account type is specifically designed for charities to manage donations, Campaigns. Direct donations cannot be made through this account.",
-    "go-dashboard": "Go to Dashboard"
+    "go-dashboard": "Go to Dashboard",
+    "address": "Address",
+    "charity-details": "Charity Details",
+    "gender": "Gender",
+    "select-gender": "Select Gender"
 }

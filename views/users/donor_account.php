@@ -104,6 +104,17 @@ if (!$user || !is_array($user)) {
             <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($user['phone'] ?? ''); ?>">
         </div>
 
+        <!-- Gender -->
+        <div>
+            <label for="phone">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="Male" <?= (isset($user['gender']) && $user['gender'] === 'Male') ? 'selected' : ''; ?>>
+                    Male</option>
+                <option value="Female" <?= (isset($user['gender']) && $user['gender'] === 'gender') ? 'selected' : ''; ?>>
+                    Female</option>
+            </select>
+        </div>
+
         <!-- City -->
         <div>
             <label for="city">City:</label>

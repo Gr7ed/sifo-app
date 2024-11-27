@@ -3,7 +3,9 @@ require_once '../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'update') {
     try {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
         if (!isset($_SESSION['user_id'])) {
             header("Location: /sifo-app/views/auth/login.php");
@@ -17,11 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
         $lastName = htmlspecialchars(trim($_POST['last_name'] ?? ''));
         $email = htmlspecialchars(trim($_POST['email'] ?? ''));
         $phone = htmlspecialchars(trim($_POST['phone'] ?? ''));
+        $gender = htmlspecialchars(trim($_POST['gender'] ?? ''));
         $city = htmlspecialchars(trim($_POST['city'] ?? ''));
         $district = htmlspecialchars(trim($_POST['district'] ?? ''));
         $password = $_POST['password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
         $charityName = htmlspecialchars(trim($_POST['charity_name'] ?? ''));
         $charityRegNumber = htmlspecialchars(trim($_POST['charity_registration_number'] ?? ''));
+
+        // Validate password and confirm password match
+        if (!empty($password) && $password !== $confirmPassword) {
+            die("Passwords do not match. Please ensure the password and confirm password fields are the same.");
+        }
 
         // Validate email format
         if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -134,6 +143,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
                 $donorParams[] = $district;
             }
 
+            if (!empty($gender)) {
+                $updateDonorQuery .= " gender = ?,";
+                $donorParams[] = $gender;
+            }
+
             $updateDonorQuery = rtrim($updateDonorQuery, ',') . " WHERE user_id = ?";
             $donorParams[] = $userId;
 
@@ -178,7 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['ac
             $stmt->execute($charityParams);
         }
 
-        header("Location: /sifo-app/views/users/account.php?success=1");
+        header("Location: /sifo-app/views/users/update_success.php");
         exit();
     } catch (Exception $e) {
         error_log("Error updating user account: " . $e->getMessage());
