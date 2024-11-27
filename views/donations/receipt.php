@@ -16,7 +16,7 @@ $snapId = $_GET['snap_id'] ?? null;
         ?>
         <h1 style="text-align: center; color: #4a4947;">Donation Receipt</h1>
         <div style="margin-top: 20px;">
-            <p><strong>Type:</strong> <?= htmlspecialchars($donation['type']); ?></p>
+            <p><strong>Donation ID:</strong> <?= htmlspecialchars($donation['donation_id']); ?></p>
             <p><strong>Type:</strong> <?= htmlspecialchars($donation['type']); ?></p>
             <p><strong>Amount:</strong> <?= htmlspecialchars($donation['amount']); ?></p>
             <p><strong>Status:</strong> <?= htmlspecialchars($donation['status']); ?></p>

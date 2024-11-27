@@ -336,7 +336,8 @@ include __DIR__ . '/layouts/header.php';
             <?php endif; ?>
         </div>
         <br>
-        <p class="view-all-link"><a href=""><?php echo translate('view-all'); ?></a></p>
+        <p class="view-all-link"><a
+                href="/sifo-app/views/campaigns/campaigns_list.php"><?php echo translate('view-all'); ?></a></p>
     </section>
     <!-- Partners Section -->
     <section class="partners">

@@ -52,7 +52,7 @@ class DonationController
                 throw new Exception("Invalid donation type selected.");
             }
             foreach ($normalizedData as $field) {
-                if (empty($data[$field])) {
+                if (empty([$field])) {
                     die("Field '{$field}' is required.");
                 }
             }
@@ -105,7 +105,7 @@ class DonationController
             }
 
             // Redirect to dashboard
-            header("Location: /sifo-app/views/dashboard/charity_dashboard.php?status=updated");
+            header("Location: /sifo-app/views/donations/charity_donations.php?status=updated");
             exit();
         } catch (Exception $e) {
             error_log("Error updating donation status: " . $e->getMessage());
