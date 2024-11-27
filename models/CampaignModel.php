@@ -17,9 +17,9 @@ class CampaignModel
     public function createCampaign($data)
     {
         $stmt = $this->db->prepare("
-        INSERT INTO campaigns (charity_id, title, description, target_amount, start_date, end_date)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ");
+            INSERT INTO campaigns (charity_id, title, description, target_amount, start_date, end_date)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
         $stmt->execute([
             $data['charity_id'],
             $data['title'],
@@ -69,10 +69,12 @@ class CampaignModel
      */
     public function contributeToCampaign($campaignId, $donorId, $amount)
     {
-        // Ensure campaign exists and is active
+        // Fetch the campaign details and ensure it exists
         $stmt = $this->db->prepare("
-            SELECT target_amount, collected_amount FROM campaigns WHERE campaign_id = ?
-        ");
+        SELECT target_amount, COALESCE(collected_amount, 0) AS collected_amount 
+        FROM campaigns 
+        WHERE campaign_id = ?
+    ");
         $stmt->execute([$campaignId]);
         $campaign = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -80,20 +82,63 @@ class CampaignModel
             throw new Exception("Campaign not found.");
         }
 
-        // Insert contribution
-        $stmt = $this->db->prepare("
-            INSERT INTO contributions (campaign_id, donor_id, amount, contribution_date)
-            VALUES (?, ?, ?, NOW())
-        ");
-        $stmt->execute([$campaignId, $donorId, $amount]);
+        // Check if the contribution exceeds the target amount
+        $remainingAmount = $campaign['target_amount'] - $campaign['collected_amount'];
+        if ($amount > $remainingAmount) {
+            throw new Exception("The contribution amount exceeds the remaining target amount.");
+        }
 
-        // Update campaign's collected amount
+        // Insert the contribution
         $stmt = $this->db->prepare("
-            UPDATE campaigns SET collected_amount = collected_amount + ? WHERE campaign_id = ?
-        ");
+        INSERT INTO contributions (campaign_id, donor_id, amount, contribution_date)
+        VALUES (?, ?, ?, NOW())
+    ");
+        $result = $stmt->execute([$campaignId, $donorId, $amount]);
+        if (!$result) {
+            throw new Exception("Failed to insert contribution.");
+        }
+        // Get the last inserted ID
+        $contributionId = $this->db->lastInsertId();
+        if (!$contributionId) {
+            throw new Exception("Failed to retrieve the contribution ID.");
+        }
+        // Update the campaign's collected amount
+        $stmt = $this->db->prepare("
+        UPDATE campaigns 
+        SET collected_amount = collected_amount + ? 
+        WHERE campaign_id = ?
+    ");
         $stmt->execute([$amount, $campaignId]);
 
-        return true;
+        // Return the contribution ID for further use
+        return $contributionId;
     }
-}
 
+
+
+    /**
+     * Retrieve a limited number of available campaigns for contribution
+     * @param int $limit Number of campaigns to fetch
+     * @return array
+     */
+    public function getAvailableCampaigns($limit = 5)
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+            campaigns.campaign_id, 
+            campaigns.title, 
+            campaigns.description, 
+            campaigns.target_amount, 
+            COALESCE(SUM(contributions.amount), 0) AS collected_amount
+        FROM campaigns
+        LEFT JOIN contributions ON campaigns.campaign_id = contributions.campaign_id
+        WHERE campaigns.end_date >= NOW() 
+        GROUP BY campaigns.campaign_id, campaigns.title, campaigns.description, campaigns.target_amount
+        ORDER BY campaigns.start_date DESC
+        LIMIT ?
+    ");
+        $stmt->execute([$limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+}

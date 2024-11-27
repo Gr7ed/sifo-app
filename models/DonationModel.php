@@ -139,6 +139,35 @@ class DonationModel
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
 
+    public function getRecentDonationsByDonor($userId, $limit)
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+        donations.created_at AS date,
+        donations.description AS item,
+        charities.charity_name AS recipient,
+        donations.status
+        FROM donations
+        LEFT JOIN charities ON donations.forwarded_to = charities.user_id
+        WHERE donations.donor_id = ?
+        ORDER BY donations.created_at DESC
+        LIMIT ?");
+        $stmt->execute([$userId, $limit]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getDonationsByDonor($userId)
+    {
+        $stmt = $this->db->prepare("
+        SELECT 
+        donations.*,
+        charities.charity_name AS recipient
+        FROM donations
+        LEFT JOIN charities ON donations.forwarded_to = charities.user_id
+        WHERE donations.donor_id = ?
+        ORDER BY donations.created_at DESC");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
 

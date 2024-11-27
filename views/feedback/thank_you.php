@@ -50,10 +50,10 @@
 </style>
 
 <main>
-    <h1>Thank You!</h1>
-    <p>Your feedback has been submitted successfully. We appreciate your feedbacks!</p>
+    <h1><?php echo translate('thanks'); ?></h1>
+    <p><?php echo translate('feedback-thanks'); ?></p>
 
-    <a href="/sifo-app/views/">Return to Home</a>
+    <a href="/sifo-app/views/"><?php echo translate('return-home'); ?></a>
 </main>
 
 <?php include_once __DIR__ . '/../layouts/footer.php'; ?>

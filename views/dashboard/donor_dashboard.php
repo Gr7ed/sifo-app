@@ -1,6 +1,8 @@
 <?php
 include __DIR__ . '/../../includes/session.php';
 require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../models/DonationModel.php';
+require_once __DIR__ . '/../../models/CampaignModel.php';
 
 // Redirect if the user is not an Individual Donor
 if ($_SESSION['user_type'] !== 'donor') {
@@ -14,33 +16,34 @@ $stmt = $db->prepare("SELECT * FROM donors WHERE user_id = ?");
 $stmt->execute([$userId]);
 $donor = $stmt->fetch();
 
-// Check if donor data exists
 if (!$donor) {
     die("Error: Donor data not found.");
 }
 
-// Fetch recent donations for the logged-in donor
-$donationsStmt = $db->prepare("
-    SELECT 
-        donations.created_at AS date,
-        donations.description AS item,
-        charities.charity_name AS recipient,
-        donations.status
-    FROM donations
-    LEFT JOIN charities ON donations.forwarded_to = charities.user_id
-    WHERE donations.donor_id = ?
-    ORDER BY donations.created_at DESC
-    LIMIT 5
-");
-$donationsStmt->execute([$userId]);
-$recentDonations = $donationsStmt->fetchAll(PDO::FETCH_ASSOC);
+$donationModel = new DonationModel($db);
+$campaignModel = new CampaignModel($db);
 
-// Include header
+// Fetch recent donations for the logged-in donor
+try {
+    $recentDonations = $donationModel->getRecentDonationsByDonor($userId, 5);
+} catch (PDOException $e) {
+    $recentDonations = [];
+    error_log("Error fetching recent donations: " . $e->getMessage());
+}
+
+// Fetch first 5 campaigns
+try {
+    $campaigns = $campaignModel->getAvailableCampaigns(5);
+} catch (PDOException $e) {
+    $campaigns = [];
+    error_log("Error fetching campaigns: " . $e->getMessage());
+}
+
 include __DIR__ . '/../layouts/header.php';
 ?>
 
+<!-- Styles -->
 <style>
-    /* General Styling */
     body {
         font-family: "Alexandria", sans-serif;
         background-color: #faf7f0;
@@ -60,23 +63,12 @@ include __DIR__ . '/../layouts/header.php';
     h1,
     h2 {
         color: #4a4947;
+        text-align: center;
     }
 
-    /* Dashboard Header */
     .dashboard-header {
         text-align: center;
         margin-bottom: 20px;
-    }
-
-    .dashboard-header h1 {
-        font-size: 2em;
-        margin-bottom: 10px;
-        color: #4a4947;
-    }
-
-    .dashboard-header p {
-        font-size: 1.2em;
-        color: #d8d2c2;
     }
 
     .logout-btn {
@@ -87,15 +79,13 @@ include __DIR__ . '/../layouts/header.php';
         font-size: 1em;
         border-radius: 5px;
         cursor: pointer;
-        margin-top: 10px;
     }
 
     .logout-btn:hover {
         background-color: #fccd2a;
     }
 
-    /* Donation Actions */
-    .donation-actions ul {
+    .actions-section ul {
         list-style: none;
         padding: 0;
         margin: 20px 0;
@@ -104,8 +94,7 @@ include __DIR__ . '/../layouts/header.php';
         justify-content: center;
     }
 
-    .donation-actions ul li a {
-        display: inline-block;
+    .actions-section ul li a {
         background-color: #4a4947;
         color: #faf7f0;
         text-decoration: none;
@@ -114,74 +103,154 @@ include __DIR__ . '/../layouts/header.php';
         font-size: 1em;
     }
 
-    .donation-actions ul li a:hover {
+    .actions-section ul li a:hover {
         background-color: #fccd2a;
     }
 
-    /* Recent Donations */
-    .recent-donations {
+    table {
+        width: 100%;
+        border-collapse: collapse;
         margin-top: 20px;
     }
 
-    .recent-donations table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-    }
-
-    .recent-donations table thead {
-        background-color: #4a4947;
-        color: #faf7f0;
-    }
-
-    .recent-donations table th,
-    .recent-donations table td {
+    table th,
+    table td {
         padding: 10px;
         text-align: left;
         border: 1px solid #d8d2c2;
     }
 
-    .recent-donations table tbody tr:nth-child(even) {
+    table thead {
+        background-color: #4a4947;
+        color: #faf7f0;
+    }
+
+    table tbody tr:nth-child(even) {
         background-color: #f9f9f9;
     }
 
-    .recent-donations table tbody tr:hover {
+    table tbody tr:hover {
         background-color: #e0b021;
     }
 
-    .recent-donations h2 {
+    /* Campaigns Section */
+    .campaigns-section {
+        margin-top: 30px;
+    }
+
+    .campaign-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .campaign-card {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .campaign-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .campaign-title {
+        font-size: 1.2em;
+        font-weight: bold;
         margin-bottom: 10px;
+        color: #4a4947;
+    }
+
+    .campaign-description {
+        font-size: 0.9em;
+        color: #6c6a68;
+        margin-bottom: 15px;
+    }
+
+    .campaign-target,
+    .campaign-collected {
+        font-size: 0.9em;
+        margin-bottom: 10px;
+        color: #4a4947;
+    }
+
+    .campaign-contribute {
+        text-align: center;
+    }
+
+    .campaign-contribute input[type="number"] {
+        width: 70%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #d8d2c2;
+        border-radius: 5px;
+    }
+
+    .campaign-contribute button {
+        background-color: #4a4947;
+        color: #faf7f0;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    .campaign-contribute button:hover {
+        background-color: #fccd2a;
+    }
+
+    .view-all-link {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .view-all-link a {
+        text-decoration: none;
+        color: #4a4947;
+        font-weight: bold;
+        border: 1px solid #4a4947;
+        padding: 8px 15px;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .view-all-link a:hover {
+        background-color: #fccd2a;
+        color: #faf7f0;
     }
 </style>
 
 <div class="dashboard-container">
     <!-- Dashboard Header -->
     <header class="dashboard-header">
-        <h1>Welcome, <?= htmlspecialchars($donor['first_name'] ?? 'Donor'); ?>!</h1>
-
-        <a class="logout-btn"
-            href="/sifo-app/controllers/AuthController.php?action=logout"><?php echo translate('logout'); ?></a>
+        <h1><?php echo translate('welcome_back'); ?> <?= htmlspecialchars($donor['first_name'] ?? 'Donor'); ?>!</h1>
     </header>
 
-    <!-- Donation Actions -->
-    <section class="donation-actions">
-        <h2>Actions</h2>
+    <!-- Actions Section -->
+    <section class="actions-section">
         <ul>
             <li><a href="/sifo-app/views/donations/donate.php"><?php echo translate('make_donation'); ?></a></li>
-            <li><a href="/sifo-app/views/donations/donation_history.php">View Donation History</a></li>
+            <li><a
+                    href="/sifo-app/views/donations/donor_donations.php"><?php echo translate('view_donation_history'); ?></a>
+            </li>
         </ul>
     </section>
 
     <!-- Recent Donations -->
     <section class="recent-donations">
-        <h2>Recent Donations</h2>
+        <h2><?php echo translate('recent_donations'); ?></h2>
         <table>
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Item</th>
-                    <th>Recipient</th>
-                    <th>Status</th>
+                    <th><?php echo translate('date'); ?></th>
+                    <th><?php echo translate('item'); ?></th>
+                    <th><?php echo translate('recipient'); ?></th>
+                    <th><?php echo translate('status'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -196,13 +265,44 @@ include __DIR__ . '/../layouts/header.php';
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="4">No recent donations found.</td>
+                        <td colspan="4" class="no-data">No recent donations found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
     </section>
+
+    <!-- Campaigns Section -->
+    <section class="campaigns-section">
+        <h2><?php echo translate('campaigns'); ?></h2>
+        <div class="campaign-grid">
+            <?php if (!empty($campaigns)): ?>
+                <?php foreach ($campaigns as $campaign): ?>
+                    <div class="campaign-card">
+                        <div class="campaign-title"><?= htmlspecialchars($campaign['title']); ?></div>
+                        <div class="campaign-description"><?= htmlspecialchars($campaign['description']); ?></div>
+                        <div class="campaign-target"><?php echo translate('target'); ?>:
+                            <?= htmlspecialchars($campaign['target_amount']); ?>
+                        </div>
+                        <div class="campaign-collected"><?php echo translate('collected'); ?>:
+                            <?= htmlspecialchars($campaign['collected_amount']); ?>
+                        </div>
+                        <div class="campaign-contribute">
+                            <form method="POST" action="/sifo-app/controllers/CampaignController.php?action=contribute">
+                                <input type="hidden" name="campaign_id" value="<?= $campaign['campaign_id']; ?>">
+                                <input type="number" name="amount" placeholder="Enter amount" required min="1">
+                                <button type="submit"><?php echo translate('contribute'); ?></button>
+                            </form>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="no-data"><?php echo translate('no-campaigns'); ?></p>
+            <?php endif; ?>
+        </div>
+        <br>
+        <p class="view-all-link"><a href=""><?php echo translate('view-all'); ?></a></p>
+    </section>
 </div>
 
-<!-- Include Footer -->
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

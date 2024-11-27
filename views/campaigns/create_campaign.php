@@ -81,7 +81,7 @@ if ($_SESSION['user_type'] !== 'charity') {
 </style>
 
 <main>
-    <h1>Create a Campaign</h1>
+    <h1><?php echo translate('create-campaign'); ?></h1>
 
     <form method="POST" action="/sifo-app/controllers/CampaignController.php?action=create">
         <label for="title">Campaign Title:</label>

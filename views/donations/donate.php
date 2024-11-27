@@ -17,6 +17,7 @@ include __DIR__ . '/../layouts/header.php';
     h2 {
         color: #4a4947;
         margin-bottom: 20px;
+        text-align: center;
     }
 
     form {
@@ -87,28 +88,28 @@ include __DIR__ . '/../layouts/header.php';
     }
 </style>
 
-<h1>Make a Donation</h1>
+<h1><?php echo translate('make_donation'); ?></h1>
 
 <form method="POST" action="/sifo-app/controllers/DonationController.php?action=donate" enctype="multipart/form-data">
     <!-- Donation Type -->
     <div class="form-group">
-        <label for="type">Donation Type:</label>
+        <label for="type"><?php echo translate('donation_type'); ?>:</label>
         <select name="type" id="type" onchange="toggleDonationFields()" required>
-            <option value="">Select a type</option>
-            <option value="Food">Food</option>
-            <option value="Non-Food">Non-Food</option>
+            <option value=""><?php echo translate('select-donation-type'); ?></option>
+            <option value="Food"><?php echo translate('food'); ?></option>
+            <option value="Non-Food"><?php echo translate('non_food'); ?></option>
         </select>
     </div>
 
     <!-- Food Donation Fields -->
     <div id="foodFields" class="hidden">
-        <h2>Food Donation Details</h2>
+        <h2><?php echo translate('food_details'); ?></h2>
         <div class="form-group">
-            <label for="description_food">Description:</label>
+            <label for="description_food"><?php echo translate('food_description'); ?>:</label>
             <textarea name="description_food" id="description_food" placeholder="Enter food details..."></textarea>
         </div>
         <div class="form-group">
-            <label for="donate_condition_food">Condition or Expiry Date:</label>
+            <label for="donate_condition_food"><?php echo translate('food_condition'); ?>:</label>
             <input type="text" name="donate_condition_food" id="donate_condition_food"
                 placeholder="Text or Date: dd/mm/yyyy">
         </div>
@@ -128,25 +129,25 @@ include __DIR__ . '/../layouts/header.php';
             <input type="text" name="district_food" id="district_food" placeholder="Enter your district">
         </div>
         <div class="form-group">
-            <label for="pickup_date_time_food">Pick Up Date & Time:</label>
+            <label for="pickup_date_time_food"><?php echo translate('pickup_date_time'); ?>:</label>
             <input type="datetime-local" name="pickup_date_time_food" id="pickup_date_time_food">
         </div>
         <div class="form-group">
-            <label for="amount_food">Amount:</label>
+            <label for="amount_food"><?php echo translate('num_amount'); ?>:</label>
             <input type="number" name="amount_food" id="amount_food" placeholder="Enter quantity or amount">
         </div>
     </div>
 
     <!-- Non-Food Donation Fields -->
     <div id="nonFoodFields" class="hidden">
-        <h2>Non-Food Donation Details</h2>
+        <h2><?php echo translate('nonfood_details'); ?></h2>
         <div class="form-group">
-            <label for="description_nonfood">Description:</label>
+            <label for="description_nonfood"><?php echo translate('nonfood_description'); ?>:</label>
             <textarea name="description_nonfood" id="description_nonfood"
                 placeholder="Enter non-food details..."></textarea>
         </div>
         <div class="form-group">
-            <label for="donate_condition_nonfood">Condition:</label>
+            <label for="donate_condition_nonfood"><?php echo translate('nonfood_condition'); ?>:</label>
             <input type="text" name="donate_condition_nonfood" id="donate_condition_nonfood"
                 placeholder="Enter condition of items">
         </div>
@@ -166,20 +167,20 @@ include __DIR__ . '/../layouts/header.php';
             <input type="text" name="district_nonfood" id="district_nonfood" placeholder="Enter your district">
         </div>
         <div class="form-group">
-            <label for="pickup_date_time_nonfood">Pick Up Date & Time:</label>
+            <label for="pickup_date_time_nonfood"><?php echo translate('pickup_date_time'); ?>:</label>
             <input type="datetime-local" name="pickup_date_time_nonfood" id="pickup_date_time_nonfood">
         </div>
         <div class="form-group">
-            <label for="amount_nonfood">Amount:</label>
+            <label for="amount_nonfood"><?php echo translate('num_amount'); ?>:</label>
             <input type="number" name="amount_nonfood" id="amount_nonfood" placeholder="Enter quantity or amount">
         </div>
         <div class="form-group">
-            <label for="photos">Upload Photos:</label>
+            <label for="photos"><?php echo translate('upload_pic'); ?></label>
             <input type="file" name="photos[]" id="photos" accept="image/*" multiple>
         </div>
     </div>
 
-    <button type="submit">Donate</button>
+    <button type="submit"><?php echo translate('donate'); ?></button>
 </form>
 <script>
     function toggleDonationFields() {

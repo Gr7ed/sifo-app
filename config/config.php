@@ -7,8 +7,8 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 // Load the appropriate language file based on the session
-// Default language (set to Arabic)
-$lang = $_SESSION['lang'] ?? 'en';
+// Default language (set to )
+$lang = $_SESSION['lang'] ?? 'ar';
 
 // Path to language files
 $langFile = __DIR__ . '/../assets/lang/' . $lang . '.json';

@@ -51,6 +51,11 @@ class DonationController
             } else {
                 throw new Exception("Invalid donation type selected.");
             }
+            foreach ($normalizedData as $field) {
+                if (empty($data[$field])) {
+                    die("Field '{$field}' is required.");
+                }
+            }
 
             // Save the donation
             $donationId = $this->donationModel->saveDonation($normalizedData);
@@ -109,19 +114,6 @@ class DonationController
     }
 
 
-
-
-    // // Validate required fields
-    // $requiredFields = ['type', 'description', 'donate_condition', 'city', 'district', 'pickup_date_time', 'amount'];
-    // foreach ($requiredFields as $field) {
-    //     if (empty($data[$field])) {
-    //         die("Field '{$field}' is required.");
-    //     }
-    // }
-
-
-
-
     public function processSnapDonation($data)
     {
         $this->donationModel->saveSnapDonation($data);
@@ -140,7 +132,7 @@ class DonationController
 
 }
 
-// session_start();
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $controller = new DonationController();

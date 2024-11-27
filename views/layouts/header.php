@@ -8,7 +8,7 @@ $userType = $isLoggedIn ? ($_SESSION['user_type'] ?? 'guest') : 'guest';
 $username = $isLoggedIn ? $_SESSION['username'] : 'Guest';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 
 <head>
     <meta charset="UTF-8">
@@ -192,9 +192,9 @@ $username = $isLoggedIn ? $_SESSION['username'] : 'Guest';
             <li><a href="/sifo-app/views"><?php echo translate('home'); ?></a></li>
             <?php if ($isLoggedIn): ?>
                 <?php if ($userType === 'donor'): ?>
-                    <li><a href="/sifo-app/views/donations/donate.php"><?php echo translate('donations'); ?></a></li>
+                    <li><a href="/sifo-app/views/donations/donor_donations.php"><?php echo translate('donations'); ?></a></li>
                 <?php elseif ($userType === 'charity'): ?>
-                    <li><a href="/sifo-app/views/campaigns/view_campaigns.php"><?php echo translate('campaigns'); ?></a></li>
+                    <li><a href="/sifo-app/views/campaigns/charity_campaigns.php"><?php echo translate('campaigns'); ?></a></li>
                     <li><a href="/sifo-app/views/donations/charity_donations.php"><?php echo translate('donations'); ?></a></li>
                 <?php endif; ?>
                 <li><a
