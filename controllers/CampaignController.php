@@ -44,7 +44,7 @@ class CampaignController
             $this->campaignModel->createCampaign($data);
 
             // Redirect with success message
-            header("Location: /sifo-app/views/campaigns/view_campaigns.php?success=Campaign created successfully.");
+            header("Location: /sifo-app/views/campaigns/create_campaign_success.php?success=campaign_created");
             exit();
         } catch (Exception $e) {
             error_log("Error creating campaign: " . $e->getMessage());
@@ -58,9 +58,9 @@ class CampaignController
      * @param int $charityId
      * @return array
      */
-    public function getCampaignsByCharity($charityId)
+    public function getAllCampaignsByCharity($charityId)
     {
-        return $this->campaignModel->getCampaignsByCharity($charityId);
+        return $this->campaignModel->getAllCampaignsByCharity($charityId);
     }
 
     /**

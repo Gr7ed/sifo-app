@@ -37,12 +37,21 @@ class CampaignModel
      * @param int $charityId
      * @return array
      */
-    public function getCampaignsByCharity($charityId)
+    public function getAllCampaignsByCharity($charityId)
     {
         $stmt = $this->db->prepare("
             SELECT * FROM campaigns WHERE charity_id = ?
         ");
         $stmt->execute([$charityId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getRecentCampaignsByCharity($charityId, $limit)
+    {
+        $stmt = $this->db->prepare("
+            SELECT * FROM campaigns WHERE charity_id = ? ORDER BY campaigns.created_at DESC LIMIT ?
+
+        ");
+        $stmt->execute([$charityId, $limit]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -121,7 +130,7 @@ class CampaignModel
      * @param int $limit Number of campaigns to fetch
      * @return array
      */
-    public function getAvailableCampaigns($limit = 5)
+    public function getRecentCampaigns($limit = 5)
     {
         $stmt = $this->db->prepare("
         SELECT 

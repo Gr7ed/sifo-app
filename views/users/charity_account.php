@@ -80,70 +80,75 @@ if (!$user || !$charity || !is_array($user)) {
 </style>
 
 <div class="account-container">
-    <h1>Manage Your Charity Account</h1>
+    <h1><?php echo translate('manage-charity'); ?></h1>
     <form method="POST" action="/sifo-app/controllers/AccountController.php?action=update">
         <!-- Charity Name -->
         <div>
-            <label for="charity_name">Charity Name:</label>
+            <label for="charity_name"><?php echo translate('charity_name'); ?>:</label>
             <input type="text" id="charity_name" name="charity_name"
                 value="<?= htmlspecialchars($charity['charity_name'] ?? ''); ?>">
         </div>
 
         <!-- Charity Registration Number -->
         <div>
-            <label for="charity_registration_number">Charity Registration Number:</label>
+            <label for="charity_registration_number"><?php echo translate('charity_reg'); ?>:</label>
             <input type="text" id="charity_registration_number" name="charity_registration_number"
                 value="<?= htmlspecialchars($charity['charity_registration_number'] ?? ''); ?>">
         </div>
 
         <!-- Email -->
         <div>
-            <label for="email">Email:</label>
+            <label for="email"><?php echo translate('email'); ?>:</label>
             <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email'] ?? ''); ?>">
         </div>
 
         <!-- Phone -->
         <div>
-            <label for="phone">Phone:</label>
+            <label for="phone"><?php echo translate('phone_num'); ?>:</label>
             <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($user['phone'] ?? ''); ?>">
         </div>
 
         <!-- City -->
         <div>
-            <label for="city">City:</label>
+            <label for="city"><?php echo translate('city'); ?>:</label>
             <select id="city" name="city">
                 <option value="Riyadh" <?= (isset($user['city']) && $user['city'] === 'Riyadh') ? 'selected' : ''; ?>>
-                    Riyadh</option>
+                    <?php echo translate('riyadh'); ?>
+                </option>
                 <option value="Jeddah" <?= (isset($user['city']) && $user['city'] === 'Jeddah') ? 'selected' : ''; ?>>
-                    Jeddah</option>
+                    <?php echo translate('jeddah'); ?>
+                </option>
                 <option value="Dammam" <?= (isset($user['city']) && $user['city'] === 'Dammam') ? 'selected' : ''; ?>>
-                    Dammam</option>
+                    <?php echo translate('dammam'); ?>
+                </option>
                 <option value="Mecca" <?= (isset($user['city']) && $user['city'] === 'Mecca') ? 'selected' : ''; ?>>
-                    Mecca</option>
+                    <?php echo translate('mecca'); ?>
+                </option>
                 <option value="Medina" <?= (isset($user['city']) && $user['city'] === 'Medina') ? 'selected' : ''; ?>>
-                    Medina</option>
+                    <?php echo translate('medina'); ?>
+                </option>
             </select>
         </div>
 
         <!-- District -->
         <div>
-            <label for="district">District:</label>
+            <label for="district"><?php echo translate('district'); ?>:</label>
             <input type="text" id="district" name="district" value="<?= htmlspecialchars($user['district'] ?? ''); ?>">
         </div>
 
         <!-- Password -->
         <div>
-            <label for="password">New Password (leave blank to keep current password):</label>
+            <label for="password"><?php echo translate('new-password'); ?>:</label>
             <input type="password" id="password" name="password">
         </div>
 
         <!-- Confirm Password -->
         <div>
-            <label for="confirm_password">Confirm Password:</label>
+            <label for="confirm_password"><?php echo translate('conf_password'); ?>:</label>
             <input type="password" id="confirm_password" name="confirm_password">
         </div>
 
-        <button type="submit">Update Information</button>
+        <button type="submit"><?php echo translate('update-info'); ?></button>
     </form>
 </div>
 

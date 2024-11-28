@@ -108,7 +108,7 @@ class DonationModel
             throw new Exception("Unable to retrieve donations. Please try again later.");
         }
     }
-    public function getRecentDonationsByCharity($charityId, $limit = 5)
+    public function getRecentDonationsByCharity($charityId, $limit = 4)
     {
         $stmt = $this->db->prepare("
             SELECT d.donation_id, d.description, d.status, d.pickup_date_time, d.city, d.district, u.username as donor_name, u.phone as donor_phone

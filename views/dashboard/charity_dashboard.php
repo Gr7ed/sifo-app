@@ -4,7 +4,6 @@ require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../models/DonationModel.php';
 require_once __DIR__ . '/../../models/CampaignModel.php';
 
-
 // Ensure the user is logged in and is a charity
 if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'charity') {
     die("Access denied. Only charities can view this page.");
@@ -30,7 +29,7 @@ $campaignModel = new CampaignModel($db);
 $status = $_GET['status'] ?? 'Available'; // Default to 'Available'
 $type = $_GET['type'] ?? ($acceptedTypes[0] ?? 'Food'); // Default to first accepted type
 $donations = $donationModel->getDonationsByStatus($status, $charityCity, $type);
-$campaigns = $campaignModel->getCampaignsByCharity($userId);
+$campaigns = $campaignModel->getRecentCampaignsByCharity($userId, 4);
 // Fetch statistics
 $totalDonationsReceived = $donationModel->getTotalDonationsByCharity($userId, 'Delivered');
 $totalPendingDonations = $donationModel->getTotalDonationsByCharity($userId, 'Pending');
@@ -38,7 +37,22 @@ $totalAvailableDonations = $donationModel->getTotalDonationsByCharity($userId, '
 $totalCampaigns = $campaignModel->getTotalCampaigns($userId);
 // Fetch recent donations (limit 5)
 $recentDonations = $donationModel->getRecentDonationsByCharity($userId);
+$translations_2 = [
+    'en' => [
+        'Received' => 'Received Donations',
+        'Pending' => 'Pending Donations',
+        'Available' => 'Available Donations',
+        'Charity Statistics' => 'Donation Statistics'
+    ],
+    'ar' => [
+        'Received' => 'تبرعات تم استلامها',
+        'Pending' => 'تبرعات قيد الانتظار',
+        'Available' => 'تبرعات متاحة',
+        'Charity Statistics' => 'إحصائيات التبرعات'
+    ]
+];
 
+$translation = $translations_2[$lang];
 include __DIR__ . '/../layouts/header.php';
 ?>
 
@@ -58,20 +72,16 @@ include __DIR__ . '/../layouts/header.php';
         color: #4a4947;
     }
 
-    .welcome-message {
-        text-align: center;
-        margin-bottom: 20px;
-        color: #4a4947;
-    }
-
     .statistics,
     .recent-donations,
-    .donation-actions {
+    .recent-campaigns,
+    .chart-section {
         margin-bottom: 30px;
     }
 
     .statistics p,
-    .recent-donations p {
+    .recent-donations p,
+    .chart-section p {
         color: #4a4947;
         margin: 5px 0;
     }
@@ -80,31 +90,13 @@ include __DIR__ . '/../layouts/header.php';
         text-align: center;
     }
 
-    .recent-donations {
+    .recent-donations,
+    .recent-campaigns {
         background-color: #d8d2c2;
         padding: 15px;
         border-radius: 8px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-
-    form {
-        margin-bottom: 20px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-    }
-
-    label {
-        color: #4a4947;
-    }
-
-    select {
-        padding: 8px;
-        border: 1px solid #d8d2c2;
-        border-radius: 4px;
-    }
-
 
     table {
         width: 100%;
@@ -143,48 +135,57 @@ include __DIR__ . '/../layouts/header.php';
     table tbody tr:hover {
         background-color: #f0e6d2;
     }
+
+    .chart-section canvas {
+        max-width: 100%;
+        height: auto;
+    }
 </style>
 
 <div class="dashboard-container">
-    <h1>Charity Dashboard</h1>
-    <p class="welcome-message">Welcome, <?= htmlspecialchars($charity['charity_name'] ?? 'Charity'); ?>!</p>
+    <p class="welcome-message"><?php echo translate('welcome'); ?>,
+        <strong><?= htmlspecialchars($charity['charity_name'] ?? 'Charity'); ?></strong>!
+    </p>
+    <br>
 
-    <!-- Statistics Section -->
-    <section class="statistics">
-        <h2>Donation Statistics:</h2>
-        <p>Total Campaigns: <?= $totalCampaigns; ?></p>
-        <p>Total Donations Received: <?= $totalDonationsReceived; ?></p>
-        <p>Pending Donations: <?= $totalPendingDonations; ?></p>
-        <p>Available Donations: <?= $totalAvailableDonations; ?></p>
+
+    <!-- Chart Section -->
+    <section class="chart-section">
+        <h2><?php echo translate('charity-overview'); ?></h2>
+        <p><strong><?php echo translate('total-campaigns'); ?>:</strong> <?= htmlspecialchars($totalCampaigns); ?></p>
+        <canvas id="donationChart" width="300" height="100"></canvas>
     </section>
 
     <!-- Recent Donations Section -->
     <section class="recent-donations">
-        <h2>Recent Donations Delivered</h2>
+        <h2><?php echo translate('recent-donations-delivered'); ?></h2>
         <?php if (empty($recentDonations)): ?>
-            <p>No recent donations available.</p>
+            <p><?php echo translate('no-recent-donations'); ?>.</p>
         <?php else: ?>
             <?php foreach ($recentDonations as $recent): ?>
-                <p><strong>Donation ID:</strong> <?= htmlspecialchars($recent['donation_id']); ?></p>
-                <p><strong>Description:</strong> <?= htmlspecialchars($recent['description']); ?></p>
-                <p><strong>Status:</strong> <?= htmlspecialchars($recent['status']); ?></p>
-                <p><strong>Date:</strong> <?= htmlspecialchars($recent['pickup_date_time']); ?></p>
+                <p><strong><?php echo translate('donationid'); ?>:</strong> <?= htmlspecialchars($recent['donation_id']); ?></p>
+                <p><strong><?php echo translate('description'); ?>:</strong> <?= htmlspecialchars($recent['description']); ?>
+                </p>
+                <p><strong><?php echo translate('status'); ?>:</strong>
+                    <?= htmlspecialchars(translateStatus($recent['status'])); ?></p>
+                <p><strong><?php echo translate('date'); ?>:</strong> <?= htmlspecialchars($recent['pickup_date_time']); ?></p>
                 <hr>
             <?php endforeach; ?>
         <?php endif; ?>
     </section>
+
+    <!-- Recent Campaigns Section -->
     <section class="recent-campaigns">
-        <h2>Recent Campaigns</h2>
-        <br>
+        <h2><?php echo translate('recent-campaigns'); ?></h2>
         <table>
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Target Amount</th>
-                    <th>Collected Amount</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
+                    <th><?php echo translate('campaign_name'); ?></th>
+                    <th><?php echo translate('description'); ?></th>
+                    <th><?php echo translate('target'); ?></th>
+                    <th><?php echo translate('collected'); ?></th>
+                    <th><?php echo translate('start_date'); ?></th>
+                    <th><?php echo translate('end_date'); ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -201,13 +202,59 @@ include __DIR__ . '/../layouts/header.php';
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7" style="text-align: center; color: #a0a0a0;">No campaigns found.</td>
+                        <td colspan="6" style="text-align: center; color: #a0a0a0;">No campaigns found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
         </table>
-
     </section>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const data = {
+        labels: [
+            '<?= htmlspecialchars($translation['Received'] ?? 'Received'); ?>',
+            '<?= htmlspecialchars($translation['Pending'] ?? 'Pending'); ?>',
+            '<?= htmlspecialchars($translation['Available'] ?? 'Available'); ?>'],
+        datasets: [{
+            label: '<?= htmlspecialchars($translation['Charity Statistics'] ?? 'Charity Statistics'); ?>',
+            data: [
+                <?= $totalDonationsReceived; ?>,
+                <?= $totalPendingDonations; ?>,
+                <?= $totalAvailableDonations; ?>
+            ],
+            backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMin: 0,
+                    suggestedMax: 20
+                }
+            }
+        }
+    };
+
+    new Chart(document.getElementById('donationChart'), config);
+</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

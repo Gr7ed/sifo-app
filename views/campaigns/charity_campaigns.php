@@ -11,7 +11,7 @@ if ($_SESSION['user_type'] !== 'charity') {
 }
 
 $charityId = $_SESSION['user_id']; // Assume user_id is the charity's ID
-$campaigns = $campaignModel->getCampaignsByCharity($charityId);
+$campaigns = $campaignModel->getAllCampaignsByCharity($charityId);
 
 include __DIR__ . '/../layouts/header.php';
 ?>
@@ -108,18 +108,18 @@ include __DIR__ . '/../layouts/header.php';
 </style>
 
 <main>
-    <h1>Your Campaigns</h1>
+    <h1><?php echo translate('your-campaigns'); ?></h1>
     <a href="/sifo-app/views/campaigns/create_campaign.php" class="add-campaign"><?= translate('add_campaign'); ?></a>
     <table>
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Target Amount</th>
-                <th>Collected Amount</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Actions</th>
+                <th><?php echo translate('campaign_name'); ?></th>
+                <th><?php echo translate('description'); ?></th>
+                <th><?php echo translate('target'); ?></th>
+                <th><?php echo translate('collected'); ?></th>
+                <th><?php echo translate('start_date'); ?></th>
+                <th><?php echo translate('end_date'); ?></th>
+                <th><?php echo translate('actions'); ?></th>
             </tr>
         </thead>
         <tbody>
@@ -134,13 +134,14 @@ include __DIR__ . '/../layouts/header.php';
                         <td><?= htmlspecialchars($campaign['end_date']); ?></td>
                         <td class="actions">
                             <a
-                                href="/sifo-app/views/campaigns/edit_campaign.php?campaign_id=<?= $campaign['campaign_id']; ?>">Edit</a>
+                                href="/sifo-app/views/campaigns/edit_campaign.php?campaign_id=<?= $campaign['campaign_id']; ?>"><?php echo translate('edit'); ?></a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="7" style="text-align: center; color: #a0a0a0;">No campaigns found.</td>
+                    <td colspan="7" style="text-align: center; color: #a0a0a0;"><?php echo translate('no-campaigns'); ?>
+                    </td>
                 </tr>
             <?php endif; ?>
         </tbody>

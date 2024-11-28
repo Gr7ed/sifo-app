@@ -46,7 +46,10 @@ if (!function_exists('translateStatus')) {
             'Jeddah' => translate('jeddah'),
             'Dammam' => translate('dammam'),
             'Mecca' => translate('mecca'),
-            'Medina' => translate('medina')
+            'Medina' => translate('medina'),
+            'Campaigns' => translate('campaigns'),
+            'Charity Statistics' => translate('charity-stat'),
+            'Received' => translate('received')
         ];
 
         return $translations[$status] ?? $status; // Return the original status if no translation is found

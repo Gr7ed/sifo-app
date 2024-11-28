@@ -71,21 +71,28 @@ include __DIR__ . '/../layouts/header.php';
 
 <div>
     <!-- Donations Section -->
-    <h2>Donations</h2>
+    <h2><?php echo translate('donations'); ?></h2>
     <form method="GET" action="">
-        <label for="status">Filter by Status:</label>
+        <label for="status"><?php echo translate('filter-bystatus'); ?>:</label>
         <select name="status" id="status" onchange="this.form.submit()">
-            <option value="Available" <?= $status === 'Available' ? 'selected' : ''; ?>>Available</option>
-            <option value="Pending" <?= $status === 'Pending' ? 'selected' : ''; ?>>Pending</option>
-            <option value="Forwarded" <?= $status === 'Forwarded' ? 'selected' : ''; ?>>Forwarded</option>
-            <option value="Delivered" <?= $status === 'Delivered' ? 'selected' : ''; ?>>Delivered</option>
+            <option value="Available" <?= $status === 'Available' ? 'selected' : ''; ?>>
+                <?php echo translate('available'); ?>
+            </option>
+            <option value="Pending" <?= $status === 'Pending' ? 'selected' : ''; ?>><?php echo translate('pending'); ?>
+            </option>
+            <option value="Forwarded" <?= $status === 'Forwarded' ? 'selected' : ''; ?>>
+                <?php echo translate('forwarded'); ?>
+            </option>
+            <option value="Delivered" <?= $status === 'Delivered' ? 'selected' : ''; ?>>
+                <?php echo translate('delivered'); ?>
+            </option>
         </select>
 
-        <label for="type">Filter by Type:</label>
+        <label for="type"><?php echo translate('filter-bytype'); ?>:</label>
         <select name="type" id="type" onchange="this.form.submit()">
             <?php foreach ($acceptedTypes as $acceptedType): ?>
                 <option value="<?= htmlspecialchars($acceptedType); ?>" <?= $type === $acceptedType ? 'selected' : ''; ?>>
-                    <?= htmlspecialchars($acceptedType); ?>
+                    <?= htmlspecialchars(translateStatus($acceptedType)); ?>
                 </option>
             <?php endforeach; ?>
         </select>
@@ -93,26 +100,33 @@ include __DIR__ . '/../layouts/header.php';
     <br>
     <?php foreach ($donations as $donation): ?>
         <div class="donation">
-            <p><strong>Donation ID:</strong> <?= htmlspecialchars($donation['donation_id']); ?></p>
-            <p><strong>Status:</strong> <?= htmlspecialchars($donation['status']); ?></p>
-            <p><strong>Description:</strong> <?= htmlspecialchars($donation['description']); ?></p>
-            <p><strong>Pick-up Time & Date:</strong> <?= htmlspecialchars($donation['pickup_date_time']); ?></p>
-            <p><strong>Donor Name:</strong> <?= htmlspecialchars($donation['donor_name']); ?></p>
-            <p><strong>Donor Phone:</strong> <?= htmlspecialchars($donation['donor_phone']); ?></p>
-            <p><strong>City:</strong> <?= htmlspecialchars($donation['city']); ?></p>
-            <p><strong>District:</strong> <?= htmlspecialchars($donation['district']); ?></p>
+            <p><strong><?php echo translate('donationid'); ?>:</strong> <?= htmlspecialchars($donation['donation_id']); ?>
+            </p>
+            <p><strong><?php echo translate('status'); ?>:</strong>
+                <?= htmlspecialchars(translateStatus($donation['status'])); ?></p>
+            <p><strong><?php echo translate('description'); ?>:</strong> <?= htmlspecialchars($donation['description']); ?>
+            </p>
+            <p><strong><?php echo translate('pickup_date_time'); ?>:</strong>
+                <?= htmlspecialchars($donation['pickup_date_time']); ?></p>
+            <p><strong><?php echo translate('donor-name'); ?>:</strong> <?= htmlspecialchars($donation['donor_name']); ?>
+            </p>
+            <p><strong><?php echo translate('donor-phone'); ?>:</strong> <?= htmlspecialchars($donation['donor_phone']); ?>
+            </p>
+            <p><strong><?php echo translate('city'); ?>:</strong>
+                <?= htmlspecialchars(translateStatus($donation['city'])); ?></p>
+            <p><strong><?php echo translate('district'); ?>:</strong> <?= htmlspecialchars($donation['district']); ?></p>
 
             <?php if ($donation['status'] === 'Available'): ?>
                 <form method="POST" action="/sifo-app/controllers/DonationController.php?action=update_status">
                     <input type="hidden" name="donation_id" value="<?= htmlspecialchars($donation['donation_id']); ?>">
                     <input type="hidden" name="new_status" value="Pending">
-                    <button type="submit">Receive Donation</button>
+                    <button type="submit"><?php echo translate('receive-donation'); ?></button>
                 </form>
             <?php elseif ($donation['status'] === 'Pending'): ?>
                 <form method="POST" action="/sifo-app/controllers/DonationController.php?action=update_status">
                     <input type="hidden" name="donation_id" value="<?= htmlspecialchars($donation['donation_id']); ?>">
                     <input type="hidden" name="new_status" value="Delivered">
-                    <button type="submit">Mark as Delivered</button>
+                    <button type="submit"><?php echo translate('mark-delivered'); ?></button>
                 </form>
             <?php endif; ?>
         </div>

@@ -97,7 +97,7 @@ include __DIR__ . '/../layouts/header.php';
         <select name="type" id="type" onchange="toggleDonationFields()" required>
             <option value=""><?php echo translate('select-donation-type'); ?></option>
             <option value="Food"><?php echo translate('food'); ?></option>
-            <option value="Non-Food"><?php echo translate('non_food'); ?></option>
+            <option value="Non-Food"><?php echo translate('nonfood'); ?></option>
         </select>
     </div>
 

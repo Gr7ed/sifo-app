@@ -10,5 +10,7 @@ return [
     'jeddah' => 'Jeddah',
     'dammam' => 'Dammam',
     'mecca' => 'Mecca',
-    'medina' => 'Medina'
+    'medina' => 'Medina',
+    'charity-stat' => 'Charity Statistics',
+    'received' => 'Received'
 ];

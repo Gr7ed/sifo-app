@@ -7,7 +7,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . '/../models/CampaignModel.php';
 $campaignModel = new CampaignModel($db);
 try {
-    $campaigns = $campaignModel->getAvailableCampaigns(5);
+    $campaigns = $campaignModel->getRecentCampaigns(5);
 } catch (PDOException $e) {
     $campaigns = [];
     error_log("Error fetching campaigns: " . $e->getMessage());
@@ -308,37 +308,39 @@ include __DIR__ . '/layouts/header.php';
         <?php endif; ?>
     </section>
     <!-- Campaigns Section -->
-    <section class="campaigns-section">
-        <h2><?php echo translate('campaigns'); ?></h2>
-        <div class="campaign-grid">
-            <?php if (!empty($campaigns)): ?>
-                <?php foreach ($campaigns as $campaign): ?>
-                    <div class="campaign-card">
-                        <div class="campaign-title"><?= htmlspecialchars($campaign['title']); ?></div>
-                        <div class="campaign-description"><?= htmlspecialchars($campaign['description']); ?></div>
-                        <div class="campaign-target"><?php echo translate('target'); ?>:
-                            <?= htmlspecialchars($campaign['target_amount']); ?>
+    <?php if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'charity'): ?>
+        <section class="campaigns-section">
+            <h2><?php echo translate('campaigns'); ?></h2>
+            <div class="campaign-grid">
+                <?php if (!empty($campaigns)): ?>
+                    <?php foreach ($campaigns as $campaign): ?>
+                        <div class="campaign-card">
+                            <div class="campaign-title"><?= htmlspecialchars($campaign['title']); ?></div>
+                            <div class="campaign-description"><?= htmlspecialchars($campaign['description']); ?></div>
+                            <div class="campaign-target"><?php echo translate('target'); ?>:
+                                <?= htmlspecialchars($campaign['target_amount']); ?>
+                            </div>
+                            <div class="campaign-collected"><?php echo translate('collected'); ?>:
+                                <?= htmlspecialchars($campaign['collected_amount']); ?>
+                            </div>
+                            <div class="campaign-contribute">
+                                <form method="POST" action="/sifo-app/controllers/CampaignController.php?action=contribute">
+                                    <input type="hidden" name="campaign_id" value="<?= $campaign['campaign_id']; ?>">
+                                    <input type="number" name="amount" placeholder="Enter amount" required min="1">
+                                    <button type="submit"><?php echo translate('contribute'); ?></button>
+                                </form>
+                            </div>
                         </div>
-                        <div class="campaign-collected"><?php echo translate('collected'); ?>:
-                            <?= htmlspecialchars($campaign['collected_amount']); ?>
-                        </div>
-                        <div class="campaign-contribute">
-                            <form method="POST" action="/sifo-app/controllers/CampaignController.php?action=contribute">
-                                <input type="hidden" name="campaign_id" value="<?= $campaign['campaign_id']; ?>">
-                                <input type="number" name="amount" placeholder="Enter amount" required min="1">
-                                <button type="submit"><?php echo translate('contribute'); ?></button>
-                            </form>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="no-data"><?php echo translate('no-campaigns'); ?></p>
-            <?php endif; ?>
-        </div>
-        <br>
-        <p class="view-all-link"><a
-                href="/sifo-app/views/campaigns/campaigns_list.php"><?php echo translate('view-all'); ?></a></p>
-    </section>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="no-data"><?php echo translate('no-campaigns'); ?></p>
+                <?php endif; ?>
+            </div>
+            <br>
+            <p class="view-all-link"><a
+                    href="/sifo-app/views/campaigns/campaigns_list.php"><?php echo translate('view-all'); ?></a></p>
+        </section>
+    <?php endif; ?>
     <!-- Partners Section -->
     <section class="partners">
         <h3><?php echo translate('our_partners'); ?></h3>

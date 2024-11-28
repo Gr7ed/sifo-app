@@ -6,4 +6,6 @@ return [
     'available' => 'متاح',
     'food' => 'طعام',
     'nonfood' => 'غير الطعام',
+    'received' => 'تم قبوله',
+    'charity-stat' => 'إحصائيات الجمعية الخيرية'
 ];

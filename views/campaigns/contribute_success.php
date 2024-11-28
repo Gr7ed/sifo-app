@@ -98,14 +98,18 @@ include __DIR__ . '/../layouts/header.php';
 </style>
 
 <div class="thanks-container">
-    <h1>Thank You, <?= htmlspecialchars($donor['first_name']); ?>!</h1>
-    <p>Your contribution of <strong><?= htmlspecialchars($contribution['amount']); ?> SAR</strong> to the campaign
-        "<strong><?= htmlspecialchars($contribution['campaign_title']); ?></strong>" has been successfully recorded.</p>
+    <h1><?php echo translate('thanks'); ?>, <?= htmlspecialchars($donor['first_name']); ?>!</h1>
+    <p><?php echo translate('your-contribution-of'); ?> <strong><?= htmlspecialchars($contribution['amount']); ?>
+            <?php echo translate('sar'); ?></strong> <?php echo translate('to-campaign'); ?>
+        "<strong><?= htmlspecialchars($contribution['campaign_title']); ?></strong>"
+        <?php echo translate('has-been-recorded'); ?>
+    </p>
     <div class="campaign-info">
-        <p><strong>Contribution ID:</strong> <?= htmlspecialchars($contributionId); ?></p>
-        <p><strong>Charity Name:</strong> <?= htmlspecialchars($contribution['charity_name']); ?></p>
+        <p><strong><?php echo translate('contributionid'); ?>:</strong> <?= htmlspecialchars($contributionId); ?></p>
+        <p><strong><?php echo translate('charity_name'); ?>:</strong>
+            <?= htmlspecialchars($contribution['charity_name']); ?></p>
     </div>
-    <a href="/sifo-app/views/dashboard/donor_dashboard.php">Back to Dashboard</a>
+    <a href="/sifo-app/views/dashboard/donor_dashboard.php"><?php echo translate('back-dashboard'); ?></a>
 </div>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

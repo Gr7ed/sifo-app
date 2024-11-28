@@ -84,23 +84,23 @@ if ($_SESSION['user_type'] !== 'charity') {
     <h1><?php echo translate('create-campaign'); ?></h1>
 
     <form method="POST" action="/sifo-app/controllers/CampaignController.php?action=create">
-        <label for="title">Campaign Title:</label>
+        <label for="title"><?php echo translate('campaign_name'); ?>:</label>
         <input type="text" name="title" id="title" placeholder="Enter the campaign title" required>
 
-        <label for="description">Description:</label>
+        <label for="description"><?php echo translate('description'); ?>:</label>
         <textarea name="description" id="description" placeholder="Enter the campaign description" required></textarea>
 
-        <label for="target_amount">Target Amount:</label>
+        <label for="target_amount"><?php echo translate('target'); ?>:</label>
         <input type="number" name="target_amount" id="target_amount" step="0.01" placeholder="Enter the target amount"
             required>
 
-        <label for="start_date">Start Date:</label>
+        <label for="start_date"><?php echo translate('start_date'); ?>:</label>
         <input type="datetime-local" name="start_date" id="start_date" required>
 
-        <label for="end_date">End Date:</label>
+        <label for="end_date"><?php echo translate('end_date'); ?>:</label>
         <input type="datetime-local" name="end_date" id="end_date" required>
 
-        <button type="submit">Create Campaign</button>
+        <button type="submit"><?php echo translate('create-campaign'); ?></button>
     </form>
 </main>
 

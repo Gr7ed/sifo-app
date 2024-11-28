@@ -33,7 +33,7 @@ try {
 
 // Fetch first 5 campaigns
 try {
-    $campaigns = $campaignModel->getAvailableCampaigns(5);
+    $campaigns = $campaignModel->getRecentCampaigns(5);
 } catch (PDOException $e) {
     $campaigns = [];
     error_log("Error fetching campaigns: " . $e->getMessage());
@@ -260,7 +260,7 @@ include __DIR__ . '/../layouts/header.php';
                             <td><?= htmlspecialchars($donation['date']); ?></td>
                             <td><?= htmlspecialchars($donation['item']); ?></td>
                             <td><?= htmlspecialchars($donation['recipient'] ?? 'Not Assigned'); ?></td>
-                            <td><?= htmlspecialchars($donation['status']); ?></td>
+                            <td><?= htmlspecialchars(translateStatus($donation['status'])); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
