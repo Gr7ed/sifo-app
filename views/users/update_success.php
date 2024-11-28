@@ -50,9 +50,10 @@ include __DIR__ . '/../layouts/header.php';
 </style>
 
 <div class="success-container">
-    <h1>Account Updated Successfully!</h1>
-    <p>Your account information has been updated.</p>
-    <a href="/sifo-app/views/users/<?php echo strtolower($userType); ?>_account.php">Return to Account</a>
+    <h1><?php echo translate('update-success'); ?>!</h1>
+    <p><?php echo translate('account-updated'); ?></p>
+    <a
+        href="/sifo-app/views/users/<?php echo strtolower($userType); ?>_account.php"><?php echo translate('return-account'); ?></a>
 </div>
 
 <?php

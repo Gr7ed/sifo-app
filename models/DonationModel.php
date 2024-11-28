@@ -216,18 +216,11 @@ class DonationModel
                 $data['donor_name'],
                 $data['amount']
             ]);
+            return $this->db->lastInsertId();
         } catch (Exception $e) {
             error_log("Error saving snap donation: " . $e->getMessage());
             throw new Exception("Unable to save snap donation. Please try again.");
         }
     }
 
-    /**
-     * Get the last inserted snap donation ID
-     * @return int Snap Donation ID
-     */
-    public function getLastSnapId()
-    {
-        return $this->db->lastInsertId();
-    }
 }

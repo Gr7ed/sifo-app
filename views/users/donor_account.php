@@ -76,81 +76,88 @@ if (!$user || !is_array($user)) {
 </style>
 
 <div class="account-container">
-    <h1>Manage Your Account</h1>
+    <h1><?php echo translate('manage-account'); ?></h1>
     <form method="POST" action="/sifo-app/controllers/AccountController.php?action=update">
         <!-- First Name -->
         <div>
-            <label for="first_name">First Name:</label>
+            <label for="first_name"><?php echo translate('first_name'); ?>:</label>
             <input type="text" id="first_name" name="first_name"
                 value="<?= htmlspecialchars($user['first_name'] ?? ''); ?>">
         </div>
 
         <!-- Last Name -->
         <div>
-            <label for="last_name">Last Name:</label>
+            <label for="last_name"><?php echo translate('last_name'); ?>:</label>
             <input type="text" id="last_name" name="last_name"
                 value="<?= htmlspecialchars($user['last_name'] ?? ''); ?>">
         </div>
 
         <!-- Email -->
         <div>
-            <label for="email">Email:</label>
+            <label for="email"><?php echo translate('email'); ?>:</label>
             <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email'] ?? ''); ?>">
         </div>
 
         <!-- Phone -->
         <div>
-            <label for="phone">Phone:</label>
+            <label for="phone"><?php echo translate('phone_num'); ?>:</label>
             <input type="text" id="phone" name="phone" value="<?= htmlspecialchars($user['phone'] ?? ''); ?>">
         </div>
 
         <!-- Gender -->
         <div>
-            <label for="phone">Gender:</label>
+            <label for="phone"><?php echo translate('gender'); ?>:</label>
             <select id="gender" name="gender">
                 <option value="Male" <?= (isset($user['gender']) && $user['gender'] === 'Male') ? 'selected' : ''; ?>>
-                    Male</option>
+                    <?php echo translate('male'); ?>
+                </option>
                 <option value="Female" <?= (isset($user['gender']) && $user['gender'] === 'gender') ? 'selected' : ''; ?>>
-                    Female</option>
+                    <?php echo translate('female'); ?>
+                </option>
             </select>
         </div>
 
         <!-- City -->
         <div>
-            <label for="city">City:</label>
+            <label for="city"><?php echo translate('city'); ?>:</label>
             <select id="city" name="city">
                 <option value="Riyadh" <?= (isset($user['city']) && $user['city'] === 'Riyadh') ? 'selected' : ''; ?>>
-                    Riyadh</option>
+                    <?php echo translate('riyadh'); ?>
+                </option>
                 <option value="Jeddah" <?= (isset($user['city']) && $user['city'] === 'Jeddah') ? 'selected' : ''; ?>>
-                    Jeddah</option>
+                    <?php echo translate('jeddah'); ?>
+                </option>
                 <option value="Dammam" <?= (isset($user['city']) && $user['city'] === 'Dammam') ? 'selected' : ''; ?>>
-                    Dammam</option>
-                <option value="Mecca" <?= (isset($user['city']) && $user['city'] === 'Mecca') ? 'selected' : ''; ?>>Mecca
+                    <?php echo translate('dammam'); ?>
+                </option>
+                <option value="Mecca" <?= (isset($user['city']) && $user['city'] === 'Mecca') ? 'selected' : ''; ?>>
+                    <?php echo translate('mecca'); ?>
                 </option>
                 <option value="Medina" <?= (isset($user['city']) && $user['city'] === 'Medina') ? 'selected' : ''; ?>>
-                    Medina</option>
+                    <?php echo translate('medina'); ?>
+                </option>
             </select>
         </div>
 
         <!-- District -->
         <div>
-            <label for="district">District:</label>
+            <label for="district"><?php echo translate('district'); ?>:</label>
             <input type="text" id="district" name="district" value="<?= htmlspecialchars($user['district'] ?? ''); ?>">
         </div>
 
         <!-- Password -->
         <div>
-            <label for="password">New Password (leave blank to keep current password):</label>
+            <label for="password"><?php echo translate('new-password'); ?>:</label>
             <input type="password" id="password" name="password">
         </div>
 
         <!-- Confirm Password -->
         <div>
-            <label for="confirm_password">Confirm Password:</label>
+            <label for="confirm_password"><?php echo translate('conf_password'); ?>:</label>
             <input type="password" id="confirm_password" name="confirm_password">
         </div>
 
-        <button type="submit">Update Information</button>
+        <button type="submit"><?php echo translate('update-info'); ?></button>
     </form>
 </div>
 

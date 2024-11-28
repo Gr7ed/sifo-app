@@ -193,6 +193,7 @@ $username = $isLoggedIn ? $_SESSION['username'] : 'Guest';
             <?php if ($isLoggedIn): ?>
                 <?php if ($userType === 'donor'): ?>
                     <li><a href="/sifo-app/views/donations/donor_donations.php"><?php echo translate('donations'); ?></a></li>
+                    <li><a href="/sifo-app/views/donations/snap_donate.php"><?php echo translate('snap_donate'); ?></a></li>
                 <?php elseif ($userType === 'charity'): ?>
                     <li><a href="/sifo-app/views/campaigns/charity_campaigns.php"><?php echo translate('campaigns'); ?></a></li>
                     <li><a href="/sifo-app/views/donations/charity_donations.php"><?php echo translate('donations'); ?></a></li>
@@ -200,6 +201,8 @@ $username = $isLoggedIn ? $_SESSION['username'] : 'Guest';
                 <li><a
                         href="/sifo-app/views/users/<?php echo strtolower($userType); ?>_account.php"><?php echo translate('account'); ?></a>
                 </li>
+            <?php else: ?>
+                <li><a href="/sifo-app/views/donations/snap_donate.php"><?php echo translate('snap_donate'); ?></a></li>
             <?php endif; ?>
             <li><a href="/sifo-app/views/feedback/feedback.php"><?php echo translate('feedback'); ?></a></li>
         </ul>

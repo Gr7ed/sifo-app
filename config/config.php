@@ -32,6 +32,29 @@ if (!function_exists('translate')) {
         return $translations[$key] ?? $key; // Return the key if translation not found
     }
 }
+if (!function_exists('translateStatus')) {
+    function translateStatus($status)
+    {
+        $translations = [
+            'Pending' => translate('pending'),
+            'Forwarded' => translate('forwarded'),
+            'Delivered' => translate('delivered'),
+            'Available' => translate('available'),
+            'Food' => translate('food'),
+            'Non-Food' => translate('nonfood'),
+            'Riyadh' => translate('riyadh'),
+            'Jeddah' => translate('jeddah'),
+            'Dammam' => translate('dammam'),
+            'Mecca' => translate('mecca'),
+            'Medina' => translate('medina')
+        ];
+
+        return $translations[$status] ?? $status; // Return the original status if no translation is found
+    }
+
+}
+
+
 // Database connection settings
 $host = 'localhost';
 $dbname = 'sifo_db';

@@ -116,19 +116,20 @@ class DonationController
 
     public function processSnapDonation($data)
     {
-        $this->donationModel->saveSnapDonation($data);
-
-        header("Location: /sifo-app/views/donations/receipt.php?snap_id=" . $this->donationModel->getLastSnapId());
-        exit();
-    }
-    public function viewDonationsByStatus($status, $city, $type)
-    {
         try {
-            return $this->donationModel->getDonationsByStatus($status, $city, $type);
+            $snapId = $this->donationModel->saveSnapDonation($data);
+
+            // Redirect to the receipt page with the snap donation ID
+            header("Location: /sifo-app/views/donations/snap_receipt.php?snap_id=$snapId");
+            exit();
         } catch (Exception $e) {
-            die("Error: " . $e->getMessage());
+            error_log("Error processing snap donation: " . $e->getMessage());
+            header("Location: /sifo-app/views/donations/snap_donate.php?error=" . urlencode("Unable to process donation. Please try again."));
+            exit();
         }
     }
+
+
 
 }
 

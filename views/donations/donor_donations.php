@@ -51,6 +51,10 @@ include __DIR__ . '/../layouts/header.php';
         border: 1px solid #d8d2c2;
     }
 
+    .not-assigned {
+        text-align: left;
+    }
+
     .donations table tbody tr:nth-child(even) {
         background-color: #f9f9f9;
     }
@@ -99,25 +103,26 @@ include __DIR__ . '/../layouts/header.php';
                     <th><?php echo translate('city'); ?></th>
                     <th><?php echo translate('district'); ?></th>
                     <th><?php echo translate('pickup_date_time'); ?></th>
-                    <th><?php echo translate('amount'); ?></th>
+                    <th><?php echo translate('num_amount'); ?></th>
                     <th><?php echo translate('recipient'); ?></th>
                     <th><?php echo translate('status'); ?></th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (!empty($donations)): ?>
+                    <p class="not-assigned"><?php echo translate('not-assigned'); ?></p>
                     <?php foreach ($donations as $donation): ?>
                         <tr>
                             <td><?= htmlspecialchars($donation['created_at']); ?></td>
-                            <td><?= htmlspecialchars($donation['type']); ?></td>
+                            <td><?= htmlspecialchars(translateStatus($donation['type'])); ?></td>
                             <td><?= htmlspecialchars($donation['description']); ?></td>
                             <td><?= htmlspecialchars($donation['donate_condition']); ?></td>
-                            <td><?= htmlspecialchars($donation['city']); ?></td>
+                            <td><?= htmlspecialchars(translateStatus($donation['city'])); ?></td>
                             <td><?= htmlspecialchars($donation['district']); ?></td>
                             <td><?= htmlspecialchars($donation['pickup_date_time']); ?></td>
                             <td><?= htmlspecialchars($donation['amount']); ?></td>
                             <td><?= htmlspecialchars($donation['recipient'] ?? 'Not Assigned'); ?></td>
-                            <td><?= htmlspecialchars($donation['status']); ?></td>
+                            <td><?= htmlspecialchars(translateStatus($donation['status'])); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
