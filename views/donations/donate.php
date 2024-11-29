@@ -106,12 +106,13 @@ include __DIR__ . '/../layouts/header.php';
         <h2><?php echo translate('food_details'); ?></h2>
         <div class="form-group">
             <label for="description_food"><?php echo translate('food_description'); ?>:</label>
-            <textarea name="description_food" id="description_food" placeholder="Enter food details..."></textarea>
+            <textarea name="description_food" id="description_food"
+                placeholder="<?php echo translate('enter-food-details'); ?>"></textarea>
         </div>
         <div class="form-group">
             <label for="donate_condition_food"><?php echo translate('food_condition'); ?>:</label>
             <input type="text" name="donate_condition_food" id="donate_condition_food"
-                placeholder="Text or Date: dd/mm/yyyy">
+                placeholder="<?php echo translate('text-date'); ?>">
         </div>
         <div class="form-group">
             <label for="city_food"><?php echo translate('city'); ?>:</label>
@@ -126,7 +127,8 @@ include __DIR__ . '/../layouts/header.php';
         </div>
         <div class="form-group">
             <label for="district_food"><?php echo translate('district'); ?>:</label>
-            <input type="text" name="district_food" id="district_food" placeholder="Enter your district">
+            <input type="text" name="district_food" id="district_food"
+                placeholder="<?php echo translate('enter_district'); ?>">
         </div>
         <div class="form-group">
             <label for="pickup_date_time_food"><?php echo translate('pickup_date_time'); ?>:</label>
@@ -134,7 +136,8 @@ include __DIR__ . '/../layouts/header.php';
         </div>
         <div class="form-group">
             <label for="amount_food"><?php echo translate('num_amount'); ?>:</label>
-            <input type="number" name="amount_food" id="amount_food" placeholder="Enter quantity or amount">
+            <input type="number" name="amount_food" id="amount_food"
+                placeholder="<?php echo translate('enter-quantity-amount'); ?>">
         </div>
     </div>
 
@@ -144,12 +147,12 @@ include __DIR__ . '/../layouts/header.php';
         <div class="form-group">
             <label for="description_nonfood"><?php echo translate('nonfood_description'); ?>:</label>
             <textarea name="description_nonfood" id="description_nonfood"
-                placeholder="Enter non-food details..."></textarea>
+                placeholder="<?php echo translate('enter-nonfood-details'); ?>"></textarea>
         </div>
         <div class="form-group">
             <label for="donate_condition_nonfood"><?php echo translate('nonfood_condition'); ?>:</label>
             <input type="text" name="donate_condition_nonfood" id="donate_condition_nonfood"
-                placeholder="Enter condition of items">
+                placeholder="<?php echo translate('enter-condition'); ?>">
         </div>
         <div class="form-group">
             <label for="city_nonfood"><?php echo translate('city'); ?>:</label>
@@ -164,7 +167,8 @@ include __DIR__ . '/../layouts/header.php';
         </div>
         <div class="form-group">
             <label for="district_nonfood"><?php echo translate('district'); ?>:</label>
-            <input type="text" name="district_nonfood" id="district_nonfood" placeholder="Enter your district">
+            <input type="text" name="district_nonfood" id="district_nonfood"
+                placeholder="<?php echo translate('enter_district'); ?>">
         </div>
         <div class="form-group">
             <label for="pickup_date_time_nonfood"><?php echo translate('pickup_date_time'); ?>:</label>
@@ -172,7 +176,8 @@ include __DIR__ . '/../layouts/header.php';
         </div>
         <div class="form-group">
             <label for="amount_nonfood"><?php echo translate('num_amount'); ?>:</label>
-            <input type="number" name="amount_nonfood" id="amount_nonfood" placeholder="Enter quantity or amount">
+            <input type="number" name="amount_nonfood" id="amount_nonfood"
+                placeholder="<?php echo translate('enter-quantity-amount'); ?>">
         </div>
         <div class="form-group">
             <label for="photos"><?php echo translate('upload_pic'); ?></label>
@@ -183,6 +188,7 @@ include __DIR__ . '/../layouts/header.php';
     <button type="submit"><?php echo translate('donate'); ?></button>
 </form>
 <script>
+    // Toggle donation fields based on selected type
     function toggleDonationFields() {
         const typeElement = document.getElementById('type');
         if (!typeElement) return; // Exit if the type element is not found
@@ -211,8 +217,48 @@ include __DIR__ . '/../layouts/header.php';
             if (nonFoodFields) nonFoodFields.style.display = 'none';
         }
     }
+
+    // Validate form fields before submission
+    function validateDonationForm(event) {
+        let isValid = true;
+        const type = document.getElementById('type').value;
+
+        if (!type) {
+            alert('Please select a donation type.');
+            document.getElementById('type').focus();
+            isValid = false;
+        }
+
+        // Validate fields based on type
+        if (type === 'Food') {
+            const amountFood = document.getElementById('amount_food').value;
+            if (parseFloat(amountFood) <= 0 || isNaN(amountFood)) {
+                alert('Amount must be a positive number.');
+                document.getElementById('amount_food').focus();
+                isValid = false;
+            }
+        } else if (type === 'Non-Food') {
+            const amountNonFood = document.getElementById('amount_nonfood').value;
+            if (parseFloat(amountNonFood) <= 0 || isNaN(amountNonFood)) {
+                alert('Amount must be a positive number.');
+                document.getElementById('amount_nonfood').focus();
+                isValid = false;
+            }
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+        }
+    }
+
+    // Attach event listeners
     document.getElementById('type')?.addEventListener('change', toggleDonationFields);
+    document.querySelector('form').addEventListener('submit', validateDonationForm);
+
+    // Initial field toggle
+    document.addEventListener('DOMContentLoaded', toggleDonationFields);
 </script>
+
 
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

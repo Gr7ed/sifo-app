@@ -21,12 +21,6 @@ class AuthController
      */
     public function register($userData)
     {
-        // Validate required fields
-        foreach (['username', 'first_name', 'last_name', 'phone', 'email', 'password', 'user_type', 'city', 'district'] as $field) {
-            if (empty($userData[$field])) {
-                die("{$field} field is required.");
-            }
-        }
 
         // Validate password and confirm password match
         if ($userData['password'] !== $userData['confirm_password']) {
@@ -147,12 +141,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Validate password and confirm password match
         if (!empty($password) && $password !== $confirmPassword) {
             die("Passwords do not match. Please ensure the password and confirm password fields are the same.");
-        }
-        // Validate required fields
-        foreach (['username', 'first_name', 'last_name', 'phone', 'email', 'password', 'user_type', 'city', 'district'] as $field) {
-            if (empty($userData[$field])) {
-                die("{$field} field is required.");
-            }
         }
 
         $auth->register($userData);

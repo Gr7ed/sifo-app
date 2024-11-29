@@ -68,7 +68,7 @@ include __DIR__ . '/../layouts/header.php';
     }
 
     .donate-link {
-        text-align: right;
+        text-align: left;
         margin-top: 10px;
     }
 

@@ -204,7 +204,6 @@ $username = $isLoggedIn ? $_SESSION['username'] : 'Guest';
             <?php else: ?>
                 <li><a href="/sifo-app/views/donations/snap_donate.php"><?php echo translate('snap_donate'); ?></a></li>
             <?php endif; ?>
-            <li><a href="/sifo-app/views/feedback/feedback.php"><?php echo translate('feedback'); ?></a></li>
         </ul>
         <ul class="right-links">
             <?php if (!$isLoggedIn): ?>

@@ -72,6 +72,11 @@ class CampaignController
     public function contributeToCampaign($campaignId, $donorId, $amount)
     {
         try {
+
+            // Ensure the user is logged in and is a charity
+            if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'donor') {
+                throw new Exception("Unauthorized access. Only donors can contribute to Campaigns.");
+            }
             // Validate the contribution amount
             if (empty($amount) || $amount <= 0) {
                 throw new Exception("Invalid contribution amount.");

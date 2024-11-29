@@ -77,7 +77,7 @@ if (!$user || !is_array($user)) {
 
 <div class="account-container">
     <h1><?php echo translate('manage-account'); ?></h1>
-    <form method="POST" action="/sifo-app/controllers/AccountController.php?action=update">
+    <form id="account-form" method="POST" action="/sifo-app/controllers/AccountController.php?action=update">
         <!-- First Name -->
         <div>
             <label for="first_name"><?php echo translate('first_name'); ?>:</label>
@@ -96,6 +96,7 @@ if (!$user || !is_array($user)) {
         <div>
             <label for="email"><?php echo translate('email'); ?>:</label>
             <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email'] ?? ''); ?>">
+            <small id="email-error" style="color: red; display: none;"><?php echo translate('invalid-email'); ?></small>
         </div>
 
         <!-- Phone -->
@@ -106,12 +107,12 @@ if (!$user || !is_array($user)) {
 
         <!-- Gender -->
         <div>
-            <label for="phone"><?php echo translate('gender'); ?>:</label>
+            <label for="gender"><?php echo translate('gender'); ?>:</label>
             <select id="gender" name="gender">
                 <option value="Male" <?= (isset($user['gender']) && $user['gender'] === 'Male') ? 'selected' : ''; ?>>
                     <?php echo translate('male'); ?>
                 </option>
-                <option value="Female" <?= (isset($user['gender']) && $user['gender'] === 'gender') ? 'selected' : ''; ?>>
+                <option value="Female" <?= (isset($user['gender']) && $user['gender'] === 'Female') ? 'selected' : ''; ?>>
                     <?php echo translate('female'); ?>
                 </option>
             </select>
@@ -155,10 +156,39 @@ if (!$user || !is_array($user)) {
         <div>
             <label for="confirm_password"><?php echo translate('conf_password'); ?>:</label>
             <input type="password" id="confirm_password" name="confirm_password">
+            <small id="password-error"
+                style="color: red; display: none;"><?php echo translate('password-mismatch'); ?></small>
         </div>
 
         <button type="submit"><?php echo translate('update-info'); ?></button>
     </form>
 </div>
+<script>
+    document.getElementById('account-form').addEventListener('submit', function (e) {
+        // Validate email format
+        const email = document.getElementById('email').value;
+        const emailError = document.getElementById('email-error');
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (email && !emailPattern.test(email)) {
+            emailError.style.display = 'block';
+            e.preventDefault(); // Prevent form submission
+        } else {
+            emailError.style.display = 'none';
+        }
+
+        // Validate password match
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+        const passwordError = document.getElementById('password-error');
+
+        if (password && password !== confirmPassword) {
+            passwordError.style.display = 'block';
+            e.preventDefault(); // Prevent form submission
+        } else {
+            passwordError.style.display = 'none';
+        }
+    });
+</script>
 
 <?php include_once __DIR__ . '/../layouts/footer.php'; ?>

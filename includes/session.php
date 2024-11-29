@@ -12,8 +12,4 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-// Optionally include user-specific logic, e.g., user type
-$user_id = $_SESSION['user_id'];
-$username = $_SESSION['username'];
-$user_type = $_SESSION['user_type'];
 ?>

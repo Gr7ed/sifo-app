@@ -80,13 +80,48 @@ include __DIR__ . '/../layouts/header.php';
     <h1><?php echo translate('snap_donate'); ?></h1>
     <form method="POST" action="/sifo-app/controllers/DonationController.php?action=snap" enctype="multipart/form-data">
         <label for="donor_name"><?php echo translate('your_name'); ?>:</label>
-        <input type="text" name="donor_name" id="donor_name" placeholder="Enter your name" required>
+        <input type="text" name="donor_name" id="donor_name" placeholder='<?php echo translate('enter_name'); ?>'
+            required>
 
         <label for="amount"><?php echo translate('donation_amount'); ?>:</label>
-        <input type="number" name="amount" id="amount" placeholder="Enter amount in SAR" min="1" required>
+        <input type="number" name="amount" id="amount" placeholder='<?php echo translate('enter_amount'); ?>' min="1"
+            required>
 
         <button type="submit"><?php echo translate('donate'); ?></button>
     </form>
 </div>
+
+<script>
+    document.querySelector("form").addEventListener("submit", function (event) {
+        // Clear previous validation styles
+        const inputs = document.querySelectorAll("input");
+        inputs.forEach(input => input.style.borderColor = "");
+
+        let isValid = true;
+
+        // Validate required fields
+        inputs.forEach(input => {
+            if (input.value.trim() === "") {
+                input.style.borderColor = "red";
+                isValid = false;
+            }
+        });
+
+        // Validate amount field
+        const amount = document.getElementById("amount").value.trim();
+        const amountRegex = /^[0-9]+(\.[0-9]+)?$/; // Accepts positive decimal numbers
+        if (!amountRegex.test(amount) || parseFloat(amount) <= 0) {
+            const amountField = document.getElementById("amount");
+            amountField.style.borderColor = "red";
+            isValid = false;
+            alert("Please enter a valid positive decimal number for the donation amount.");
+        }
+
+        // Prevent form submission if validation fails
+        if (!isValid) {
+            event.preventDefault();
+        }
+    });
+</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
