@@ -30,6 +30,8 @@ $username = $isLoggedIn ? $_SESSION['username'] : 'Guest';
             font-family: "Alexandria", sans-serif;
             background-color: #faf7f0;
             color: #4a4947;
+            margin-bottom: 80px;
+            /* Ensures content doesn't overlap the footer */
         }
 
         /* Header Section */
@@ -148,6 +150,10 @@ $username = $isLoggedIn ? $_SESSION['username'] : 'Guest';
             gap: 10px;
             font-family: 'Alexandria', sans-serif;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
         }
 
         .footer-links,
@@ -172,8 +178,10 @@ $username = $isLoggedIn ? $_SESSION['username'] : 'Guest';
         .footer-copyright {
             color: #d8d2c2;
             text-align: center;
+            flex-grow: 1;
         }
     </style>
+
 </head>
 
 <body>

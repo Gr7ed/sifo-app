@@ -220,6 +220,10 @@
 "enter-campaign-description":"أدخل وصف الحملة",
 "enter-target":"أدخل المبلغ المستهدف",
 "right-reserved": "2024 SIFO. جميع الحقوق محفوظة.",
-"photos": "الصور"
+"photos": "الصور",
+"new-password-reset": "كلمة المرور الجديدة",
+"enter-new-password": "أدخل كلمة مرور الجديدة",
+"reset-password": "إعادة تعيين كلمة المرور",
+"set-new-password": "إعادة تعيين كلمة المرور"
 
 }

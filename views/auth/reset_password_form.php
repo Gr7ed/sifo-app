@@ -92,12 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 
     <main>
-        <h1>Set New Password</h1>
+        <h1><?php echo translate('set-new-password'); ?></h1>
         <form method="POST">
             <input type="hidden" name="token" value="<?= htmlspecialchars($token); ?>">
-            <label for="password">New Password:</label>
-            <input type="password" name="password" id="password" required placeholder="Enter your new password">
-            <button type="submit">Reset Password</button>
+            <label for="password"><?php echo translate('new-password-reset'); ?>:</label>
+            <input type="password" name="password" id="password" required
+                placeholder="<?php echo translate('enter-new-password'); ?>">
+            <button type="submit"><?php echo translate('reset-password'); ?></button>
         </form>
     </main>
     <?php
