@@ -29,8 +29,19 @@ $status = $_GET['status'] ?? 'Available'; // Default to 'Available'
 $type = $_GET['type'] ?? ($acceptedTypes[0] ?? 'Food'); // Default to first accepted type
 $donations = $donationModel->getDonationsByStatus($status, $charityCity, $type);
 
+// Fetch photos for each donation
+$photos = [];
+if ($type === 'Non-Food') {
+    $photoStmt = $db->prepare("SELECT * FROM donation_photos WHERE donation_id = ?");
+    foreach ($donations as $donation) {
+        $photoStmt->execute([$donation['donation_id']]);
+        $photos[$donation['donation_id']] = $photoStmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
+
 include __DIR__ . '/../layouts/header.php';
 ?>
+
 <style>
     h2 {
         text-align: center;
@@ -66,6 +77,14 @@ include __DIR__ . '/../layouts/header.php';
 
     .donation button:hover {
         background-color: #fccd2a;
+    }
+
+    .donation img {
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
     }
 </style>
 
@@ -116,6 +135,17 @@ include __DIR__ . '/../layouts/header.php';
                 <?= htmlspecialchars(translateStatus($donation['city'])); ?></p>
             <p><strong><?php echo translate('district'); ?>:</strong> <?= htmlspecialchars($donation['district']); ?></p>
 
+            <?php if ($type === 'Non-Food' && !empty($photos[$donation['donation_id']])): ?>
+                <p><strong><?php echo translate('photos'); ?>:</strong></p>
+                <div>
+                    <?php foreach ($photos[$donation['donation_id']] as $photo): ?>
+                        <a href="<?= htmlspecialchars($photo['file_path']); ?>" target="_blank">
+                            <img src="<?= htmlspecialchars($photo['file_path']); ?>" alt="Donation Photo">
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+
             <?php if ($donation['status'] === 'Available'): ?>
                 <form method="POST" action="/sifo-app/controllers/DonationController.php?action=update_status">
                     <input type="hidden" name="donation_id" value="<?= htmlspecialchars($donation['donation_id']); ?>">
@@ -132,6 +162,5 @@ include __DIR__ . '/../layouts/header.php';
         </div>
     <?php endforeach; ?>
 </div>
-
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>
