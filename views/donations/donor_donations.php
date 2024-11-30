@@ -92,7 +92,7 @@ include __DIR__ . '/../layouts/header.php';
 <div>
     <!-- Recent Donations -->
     <section class="donations">
-        <h2><?php echo translate('donations'); ?></h2>
+        <h2><?php echo translate('my-donations'); ?></h2>
         <table>
             <thead>
                 <tr>
