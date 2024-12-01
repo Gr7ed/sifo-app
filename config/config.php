@@ -62,7 +62,7 @@ if (!function_exists('translateStatus')) {
 $host = 'localhost';
 $dbname = 'sifo_db';
 $user = 'root';
-$pass = '';
+$pass = 'Admin1234';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$dbname;charset=$charset";
